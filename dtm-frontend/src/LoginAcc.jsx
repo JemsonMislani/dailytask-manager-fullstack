@@ -6,6 +6,7 @@ export default function LoginAcc() {
   const [user, setUser] = useState([])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [remember, setRemember] = useState(false)
   const nav = useNavigate()
 
   const handleLoginBtn = (e) => {
@@ -19,7 +20,11 @@ export default function LoginAcc() {
     })
     .then(result => {
       setUser(result.data.user)
-      localStorage.setItem('userstokens', result.data.token)
+      if(remember){
+        localStorage.setItem('userstokens', result.data.token)
+      } else {
+        sessionStorage.setItem('userstokens', result.data.token)
+      }
       nav('/success')
     })
     .catch(err => {
@@ -52,6 +57,8 @@ export default function LoginAcc() {
                     type="checkbox"
                     id="remember"
                     className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-300 rounded"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
                   />
                   <label htmlFor="">Remember me</label>
                   </div>
