@@ -1,30 +1,56 @@
 import { useState } from "react"
+import { useEffect } from "react"
+import { jwtDecode } from "jwt-decode";
+import axios from 'axios'
 
 export default function Dashboard() {
+  const [section, setSection] = useState([])
   const [showinp, setShowInp] = useState(false)
+  const [userId, setUserId] = useState(null)
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
 
-  const handleAddSecBtn = (e) => {
-    e.preventDefault()
+  const handleAddSecBtn = () => {
     if(!title || !desc){
       alert('Please fill out fields')
-      return
+      return false
     }
+    return true
   }
+
+  const addSectionTitle = () => {
+    axios.post('http://localhost:3004/createSection', {
+      user_id: userId, title: title, description: desc
+    })
+    .then(result => {
+      setSection(prev => [...prev, result.data])
+      setTitle('')
+      setDesc('')
+      setShowInp(false)
+    })
+    .catch(err => console.log(err))
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+    if(token){
+      const decoded = jwtDecode(token)
+      setUserId(decoded.id)
+    }
+  }, [])
 
   return (
     <>
       <div className="flex h-screen bg-gray-100">
         <aside className="w-64 bg-gray-900 text-white flex flex-col">
-          <div className="text-2xl font-bold p-6 border-b borderg-gray-700">My Dashboard</div>
+          <div className="text-2xl font-bold p-6 border-b border-gray-700">My Dashboard</div>
           <nav className="flex-1 p-4 space-y-2">
             <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Home</a>
             <a href="" className="block px-4 py-2 rounded hover:bg-gray-700">Task section</a>
             <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed</a>
             <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending</a>
           </nav>
-          <div className="p-4 border-t border-gray-700 texr-sm text-gray-400">
+          <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani
           </div>
         </aside>
@@ -53,7 +79,12 @@ export default function Dashboard() {
                         onChange={(e) => setDesc(e.target.value)}/>
                       <button
                         className="bg-green-700 px-7 text-white rounded cursor-pointer hover:bg-green-800 active:bg-green-700"
-                        onClick={handleAddSecBtn}>Add</button>
+                        onClick={(e) => { 
+                          e.preventDefault();
+                         if(handleAddSecBtn()){
+                          addSectionTitle();
+                         }
+                        }}>Add</button>
                       <button
                         className="bg-red-700 px-6 text-white rounded cursor-pointer hover:bg-red-800 active:bg-red-700"
                         onClick={() => setShowInp(false)}>Close</button>
