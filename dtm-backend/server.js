@@ -32,6 +32,36 @@ app.post('/createAcc', async (req, res) => {
     }
 })
 
+// create login, validate acc
+app.post('/createLogin', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const result = await pool.query('SELECT * FROM users WHERE email=$1', [ email ])
+        if(result.rows.length === 0){
+            return res.status(400).json({message: 'User not found'})
+        }
+
+        const user = result.rows[0]
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if(!isMatch){
+            return res.status(400).json({message: 'Invalid credentials'})
+        }
+
+        const token = jwt.sign({id: user.id}, 'YOUR_JWT_SECRET', {expiresIn: '1h'})
+        return res.json({
+            token,
+            user: {id: user.id, email: user.email}
+        })
+        res.json({
+            token, 
+            user: {id: user.id, email:user.email}})
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 const PORT = 3004;
 app.listen(PORT, () => {
     console.log(`Jem! your server is running on port ${PORT}`)
