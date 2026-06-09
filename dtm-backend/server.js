@@ -17,6 +17,20 @@ const pool = new Pool({
     port: 5432
 })
 
+// create user account
+app.post('/createAcc', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const hashedPw = await bcrypt.hash(password, 10)
+        const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *', [
+            email, hashedPw
+        ])
+        res.json(result.rows[0])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
 
 const PORT = 3004;
 app.listen(PORT, () => {
