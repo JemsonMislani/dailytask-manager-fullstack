@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useEffect } from "react"
 import { jwtDecode } from "jwt-decode";
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 export default function Dashboard() {
@@ -45,8 +46,8 @@ export default function Dashboard() {
         <aside className="w-64 bg-gray-900 text-white flex flex-col">
           <div className="text-2xl font-bold p-6 border-b border-gray-700">My Dashboard</div>
           <nav className="flex-1 p-4 space-y-2">
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Home</a>
-            <a href="" className="block px-4 py-2 rounded hover:bg-gray-700">Task section</a>
+            <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
+            <Link to={'/tasksection'}className="block px-4 py-2 rounded hover:bg-gray-700">Task section</Link>
             <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed</a>
             <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending</a>
           </nav>

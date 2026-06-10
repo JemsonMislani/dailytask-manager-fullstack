@@ -77,6 +77,18 @@ app.post('/createSection', async (req, res) => {
     }
 })
 
+// get section
+app.get('/getSection', async (req, res) => {
+    try {
+        const { user_id, title, description } = req.query;
+        const result = await pool.query('SELECT * FROM sections ORDER BY id ASC')
+        res.json(result.rows)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 const PORT = 3004;
 app.listen(PORT, () => {
     console.log(`Jem! your server is running on port ${PORT}`)

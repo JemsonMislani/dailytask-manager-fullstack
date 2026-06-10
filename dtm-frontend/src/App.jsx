@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import CreateAcc from './CreateAcc'
 import LoginAcc from './LoginAcc'
 import Dashboard from './Dashboard'
+import TaskSection from './TaskSection'
 
 export default function App() {
 
@@ -12,6 +13,7 @@ export default function App() {
         <Route path='/' element={<LoginAcc />}/>
         <Route path='/create' element={<CreateAcc />}/>
         <Route path='/success' element={<Dashboard />}/>
+        <Route path='/tasksection' element={<TaskSection />}/>
       </Routes>
       </BrowserRouter>
     </>
