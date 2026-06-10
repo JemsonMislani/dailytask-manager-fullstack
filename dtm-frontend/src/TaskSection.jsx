@@ -64,7 +64,7 @@ export default function TaskSection(){
         </aside>
             <main className="flex-1 p-6 overflow-auto">
             <h1 className="text-2xl font-semibold mb-5">Tasks sections📝</h1>
-                <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3in, 1fr))' }}>
+                <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3in, max-content))' }}>
                     {section.map(sec => (
                     <div
                         key={sec.id}
