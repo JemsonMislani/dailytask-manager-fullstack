@@ -89,6 +89,25 @@ app.get('/getSection', async (req, res) => {
     }
 })
 
+// edit section 
+app.put('/editSection/:id', async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const { title, description } = req.body
+        const result = await pool.query('UPDATE sections SET title=$1, description=$2 WHERE id=$3 RETURNING *', [
+            title, description, id
+        ])
+        if(result.rows.length === 0){
+            return res.status(404).json({message: 'Section not found'})
+        }
+        res.json(result.rows[0])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 const PORT = 3004;
 app.listen(PORT, () => {
     console.log(`Jem! your server is running on port ${PORT}`)
