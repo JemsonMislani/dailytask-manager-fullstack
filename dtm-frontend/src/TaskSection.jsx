@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
@@ -9,6 +9,7 @@ export default function TaskSection(){
     const [findsecId, setFindSecId] = useState(null)
     const [title, setTitle] = useState('')
     const [notes, setNotes] = useState('')
+    const nav = useNavigate()
 
     useEffect(() => {
     axios.get('http://localhost:3004/getSection',)
@@ -71,10 +72,15 @@ export default function TaskSection(){
                         className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
                         style={{ width: '3in', height: '3in' }}
                     >
-                        <div className="flex items-center justify-center" style={{ flex: '0 0 auto' }}>
-                        <button className="text-1xl cursor-pointer">Add task ➕</button>
+                        <div 
+                            className="flex items-center justify-center" style={{ flex: '0 0 auto' }}
+                            >
+                        <button 
+                            className="text-1xl cursor-pointer"
+                            onClick={() => nav('/addtask')}>Add task ➕</button>
                         </div>
-                        <div className="text-left border border-1 p-2 rounded bg-sky-800 text-white overflow-hidden">
+                        <div 
+                            className="text-left border border-1 p-2 rounded bg-sky-800 text-white overflow-hidden">
                             {
                                 findsecId === sec.id ? 
                                 (<>
