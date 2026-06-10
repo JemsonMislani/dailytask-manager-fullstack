@@ -38,6 +38,15 @@ export default function TaskSection(){
         .catch(err => console.log(err))
     }
 
+    const handleDelBtn = (id) => {
+        axios.delete('http://localhost:3004/deleteSection/' + id)
+        .then(result => {
+            setSection(prev => prev.filter(sec => sec.id !== id))
+            console.log(result)
+        })
+        .catch(err => console.log(err))
+    }
+
     return(
         <>
      <div className="flex h-screen bg-gray-100">
@@ -100,7 +109,8 @@ export default function TaskSection(){
                                     onClick={() => clickEdit(sec)}>
                                     <FaEdit />
                                     </button>
-                                    <button className="text-red-400 hover:text-red-300 cursor-pointer">
+                                    <button className="text-red-400 hover:text-red-300 cursor-pointer"
+                                    onClick={() => handleDelBtn(sec.id)}>
                                     <FaTrash />
                                     </button>
                                 </div>
