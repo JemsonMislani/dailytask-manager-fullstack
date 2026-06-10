@@ -2,16 +2,41 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 
 export default function TaskSection(){
     const [section, setSection] = useState([])
+    const [findsecId, setFindSecId] = useState(null)
+    const [title, setTitle] = useState('')
+    const [notes, setNotes] = useState('')
 
     useEffect(() => {
     axios.get('http://localhost:3004/getSection',)
     .then(result => setSection(result.data))
     .catch(err => console.log(err))
 }, [])
+
+    const clickEdit = (sec) => {
+        setFindSecId(sec.id)
+        setTitle(sec.title)
+        setNotes(sec.description)
+    }
+
+    const handleSaveBtn = (id) => {
+        axios.put('http://localhost:3004/editSection/' + id, {
+            title: title, description: notes
+        })
+        .then(result => {
+            setSection(prev => prev.map(item => item.id === id
+            ?
+            result.data : item
+            ))
+            setFindSecId(null)
+            setTitle('')
+            setNotes('')
+        })
+        .catch(err => console.log(err))
+    }
 
     return(
         <>
@@ -41,18 +66,54 @@ export default function TaskSection(){
                         <button className="text-1xl cursor-pointer">Add task ➕</button>
                         </div>
                         <div className="text-left border border-1 p-2 rounded bg-sky-800 text-white overflow-hidden">
-                        <div className="flex items-center justify-between">
-                        <p className="font-bold truncate">Title: {sec.title}</p>
-                        <div className="flex items-center gap-2">
-                            <button className="text-yellow-400 hover:text-yellow-300 cursor-pointer">
-                            <FaEdit />
-                            </button>
-                            <button className="text-red-400 hover:text-red-300 cursor-pointer">
-                            <FaTrash />
-                            </button>
-                        </div>
-                        </div>
-                        <p className="truncate">Notes: {sec.description}</p>
+                            {
+                                findsecId === sec.id ? 
+                                (<>
+                                <input type="text"
+                                    className="border border-1 mb-1 px-1 rounded" 
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}/>
+                                    <textarea
+                                        className="border border-1 px-1 rounded mr-6"
+                                        value={notes}
+                                        onChange={(e) => setNotes(e.target.value)}
+                                    />
+                                    <button
+                                        className="text-green-500 mr-1 cursor-pointer hover:bg-green-500 hover:text-white transition transform hover:scale-105"
+                                        disabled={!title.trim()}
+                                        onClick={() => 
+                                        handleSaveBtn(sec.id)}><FaCheck /></button>
+                                    <button
+                                        className="text-red-400 hover:bg-red-500 hover:text-white transition transform hover:scale-105 cursor-pointer"
+                                        onClick={() => {
+                                            setFindSecId(null)
+                                            setTitle('')
+                                            setNotes('')
+                                        }}><FaTimes /></button>
+                                </>) 
+                                :
+                                (<>
+                                <div className="flex items-center justify-between">
+                                <p className="font-bold truncate">Title: {sec.title}</p>
+                                <div className="flex items-center gap-2">
+                                    <button className="text-yellow-400 hover:text-yellow-300 cursor-pointer"
+                                    onClick={() => clickEdit(sec)}>
+                                    <FaEdit />
+                                    </button>
+                                    <button className="text-red-400 hover:text-red-300 cursor-pointer">
+                                    <FaTrash />
+                                    </button>
+                                </div>
+                                </div>
+                                </>)
+                            }
+                            {
+                                findsecId !== sec.id && (
+                                    <p className="truncate">
+                                        Notes: {sec.description}
+                                    </p>
+                                )
+                            }
                         </div>
                     </div>
                     ))}
