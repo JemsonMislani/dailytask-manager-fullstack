@@ -17,6 +17,8 @@ const pool = new Pool({
     port: 5432
 })
 
+// FOR USERS
+
 // create user account
 app.post('/createAcc', async (req, res) => {
     try {
@@ -77,6 +79,8 @@ app.post('/createSection', async (req, res) => {
     }
 })
 
+// FOR SECTION
+
 // get section
 app.get('/getSection', async (req, res) => {
     try {
@@ -117,6 +121,23 @@ app.delete('/deleteSection/:id', async(req, res) => {
         if(result.rows.length === 0){
             return res.status(404).json({message: 'Section not found'})
         }
+        res.json(result.rows[0])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
+// FOR TASKS
+
+// create task
+app.post('/createTask', async (req, res) => {
+
+    try {
+        const { user_id, section_id, task_name, completed, due_date, due_time } = req.body
+        const result = await pool.query('INSERT INTO tasks (user_id, section_id, task_name, completed, due_date, due_time) VALUES ($1, $2, $3, $4, $5, $6) returning *', [
+            user_id, section_id, task_name, completed, due_date, due_time
+        ])
         res.json(result.rows[0])
     } catch (error) {
         console.log(error)
