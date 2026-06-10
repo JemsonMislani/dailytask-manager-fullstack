@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function TaskSection(){
     const [section, setSection] = useState([])
@@ -40,7 +41,17 @@ export default function TaskSection(){
                         <button className="text-1xl cursor-pointer">Add task ➕</button>
                         </div>
                         <div className="text-left border border-1 p-2 rounded bg-sky-800 text-white overflow-hidden">
+                        <div className="flex items-center justify-between">
                         <p className="font-bold truncate">Title: {sec.title}</p>
+                        <div className="flex items-center gap-2">
+                            <button className="text-yellow-400 hover:text-yellow-300 cursor-pointer">
+                            <FaEdit />
+                            </button>
+                            <button className="text-red-400 hover:text-red-300 cursor-pointer">
+                            <FaTrash />
+                            </button>
+                        </div>
+                        </div>
                         <p className="truncate">Notes: {sec.description}</p>
                         </div>
                     </div>
