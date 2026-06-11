@@ -15,12 +15,15 @@ export default function CreateTask() {
     const [getTitle, setGetTitle] = useState('')
 
     useEffect(() => {
-        axios.get('http://localhost:3004/getTask',)
+        if (!section_id) 
+            return;
+
+        axios.get('http://localhost:3004/getTask/' + section_id)
         .then(result => {
             setTask(result.data)
         })
         .catch(err => console.log(err))
-    }, [])
+    }, [section_id])
 
     const addTaskBtn = (e) => {
         e.preventDefault()
@@ -36,8 +39,12 @@ export default function CreateTask() {
             due_time: time,
             completed: false
         })
+
+        .then(() => {
+        return axios.get('http://localhost:3004/getTask/' + section_id)})
+
         .then(result => {
-            setTask(prev => ([...prev, result.data]))
+            setTask(result.data)
             setTodo('')
             setDate('')
             setTime('')
@@ -61,24 +68,6 @@ export default function CreateTask() {
                 hour12: true
             })
         }
-
-        useEffect(() => {
-            axios.get('http://localhost:3004/getTask')
-            .then(result => {
-                const findSecId = result.data.filter(f => f.section_id === Number(section_id))
-
-                setTask(findSecId)
-            })
-            .catch(err => console.log(err))
-        }, [section_id])
-
-        useEffect(() => {
-            axios.get('http://localhost:3004/getTask/' + section_id)
-            .then(result => {
-                setTask(result.data)
-            })
-            .catch(err => console.log(err))
-        }, [section_id])
 
         useEffect(() => {
             axios.get('http://localhost:3004/getSection/' + section_id)
@@ -123,7 +112,7 @@ export default function CreateTask() {
                         <div
                             className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100"
                         >
-                            <span>
+                            <span className="font-semibold rounded p-2 bg-gray-300">
                                 {t.task_name} • {t.due_date?.split('T')[0]} • {formatTime(t.due_time)}
                             </span>
 

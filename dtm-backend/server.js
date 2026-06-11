@@ -174,8 +174,8 @@ app.post('/createTask', async (req, res) => {
 app.get('/getTask/:sectionId', async (req, res) => {
 
     try {
-        const { section_id } = req.params;
-        const result = await pool.query('SELECT * FROM tasks WHERE section_id = $1 ORDER BY id ASC', [ section_id ])
+        const { sectionId  } = req.params;
+        const result = await pool.query('SELECT * FROM tasks WHERE section_id = $1 ORDER BY id ASC', [ sectionId ])
         res.json(result.rows)
     } catch (error) {
         console.log(error)
