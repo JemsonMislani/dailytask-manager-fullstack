@@ -90,9 +90,10 @@ export default function CreateTask() {
             <div className="m-10 mr-auto ml-auto w-230">
                 {
                     task.map((t) => (
-                    <div className="flex justify-center items-center">
+                    <div 
+                        key={t.id}
+                        className="flex justify-center items-center">
                         <div
-                            key={t.id}
                             className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100"
                         >
                             <span>

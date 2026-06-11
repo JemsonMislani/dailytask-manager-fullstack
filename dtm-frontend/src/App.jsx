@@ -3,7 +3,7 @@ import CreateAcc from './CreateAcc'
 import LoginAcc from './LoginAcc'
 import Dashboard from './Dashboard'
 import TaskSection from './TaskSection'
-import CreateTask from '../CreateTask'
+import CreateTask from './CreateTask'
 
 export default function App() {
 
