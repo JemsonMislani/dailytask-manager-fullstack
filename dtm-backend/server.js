@@ -93,6 +93,19 @@ app.get('/getSection', async (req, res) => {
     }
 })
 
+// get section title using id
+app.get('/getSection/:id', async (req, res) => {
+    
+    try {
+        const { id } = req.params
+        const result = await pool.query('SELECT * FROM sections WHERE id = $1', [ id ])
+        res.json(result.rows[0])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 // edit section 
 app.put('/editSection/:id', async (req, res) => {
 

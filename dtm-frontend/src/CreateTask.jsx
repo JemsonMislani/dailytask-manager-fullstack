@@ -12,6 +12,7 @@ export default function CreateTask() {
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
     const { section_id } = useParams()
+    const [getTitle, setGetTitle] = useState('')
 
     useEffect(() => {
         axios.get('http://localhost:3004/getTask',)
@@ -29,7 +30,7 @@ export default function CreateTask() {
         }
         axios.post('http://localhost:3004/createTask', {
             user_id: userId,
-            section_id: section_id,
+            section_id: Number(section_id),
             task_name: todo,
             due_date: date,
             due_time: time,
@@ -79,11 +80,18 @@ export default function CreateTask() {
             .catch(err => console.log(err))
         }, [section_id])
 
+        useEffect(() => {
+            axios.get('http://localhost:3004/getSection/' + section_id)
+            .then(result => {
+                setGetTitle(result.data.title)
+            })
+            .catch(err => console.log(err))
+        }, [])
 
     return(
         <>
             <div className="flex justify-center items-center h-40">
-                <h1 className="text-3xl">What's our task for today?</h1>
+                <h1 className="text-3xl">What's our task for <span className="font-semibold">{getTitle}</span> today?</h1>
             </div>
             <div className="flex justify-center items-center h-30">
                 <div className="flex gap-2 px-10 py-10 rounded shadow-sm bg-gray-100">
