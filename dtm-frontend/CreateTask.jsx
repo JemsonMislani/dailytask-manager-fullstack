@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 
 export default function CreateTask() {
@@ -10,6 +11,55 @@ export default function CreateTask() {
     const [todo, setTodo] = useState('')
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
+
+    useEffect(() => {
+        axios.get('http://localhost:3004/getTask',)
+        .then(result => {
+            setTask(result.data)
+        })
+        .catch(err => console.log(err))
+    }, [])
+
+    const addTaskBtn = (e) => {
+        e.preventDefault()
+        if(!todo || !date || !time){
+            alert('Please fill out all fields')
+            return
+        }
+        axios.post('http://localhost:3004/createTask', {
+            user_id: userId,
+            section_id: secId,
+            task_name: todo,
+            due_date: date,
+            due_time: time,
+            completed: false
+        })
+        .then(result => {
+            setTask(prev => ([...prev, result.data]))
+            setTodo('')
+            setDate('')
+            setTime('')
+        })
+        .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+
+        if(token){
+            const decoded = jwtDecode(token);
+            setUserId(decoded.id);
+        }
+        }, []);
+
+        const formatTime = (time) => {
+            return new Date(`1999-02-11T${time}`).toLocaleTimeString('en-PH', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            })
+        }
+        
 
     return(
         <>
@@ -34,8 +84,31 @@ export default function CreateTask() {
                         value={time}
                         onChange={(e) => setTime(e.target.value)}/>
                         <button className="border border-1 pl-5 pr-5 py-3 rounded bg-green-700 text-white cursor-pointer hover:bg-green-800 active:bg-green-700 "
-                        >Add Task</button>
+                        onClick={addTaskBtn}>Add Task</button>
                 </div>
+            </div>
+            <div className="m-10 mr-auto ml-auto w-230">
+                {
+                    task.map((t) => (
+                    <div className="flex justify-center items-center">
+                        <div
+                            key={t.id}
+                            className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100"
+                        >
+                            <span>
+                                {t.task_name} • {t.due_date?.split('T')[0]} • {formatTime(t.due_time)}
+                            </span>
+
+                            <button 
+                                className="py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500">Edit</button>
+                            <button 
+                                className="py-2 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700">Completed</button>
+                            <button 
+                                className="py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700">Delete</button>
+                        </div>
+                    </div>
+                    ))
+                }
             </div>
         </>
     );

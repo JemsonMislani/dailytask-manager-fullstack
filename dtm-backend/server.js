@@ -130,6 +130,18 @@ app.delete('/deleteSection/:id', async(req, res) => {
 
 // FOR TASKS
 
+// get task
+app.get('/getTask', async (req, res) => {
+
+    try {
+        const result = await pool.query('SELECT * FROM tasks ORDER BY id ASC');
+        res.json(result.rows)
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error')
+    }
+})
+
 // create task
 app.post('/createTask', async (req, res) => {
 
