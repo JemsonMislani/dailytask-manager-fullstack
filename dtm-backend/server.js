@@ -183,6 +183,26 @@ app.get('/getTask/:sectionId', async (req, res) => {
     }
 })
 
+// update/edit task by id
+app.put('/updateTask/:id', async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const { task_name, due_date, due_time, completed } = req.body;
+
+        const result = await pool.query('UPDATE tasks SET task_name = $1, due_date=$2, due_time=$3, completed=$4 WHERE id=$5 RETURNING *', [
+            task_name, due_date, due_time, completed, id
+        ])
+        if(result.rows.length === 0){
+            return res.status(404).json({message: 'Task not found'})
+        }
+        res.json(result.rows[0])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 
 const PORT = 3004;
 app.listen(PORT, () => {
