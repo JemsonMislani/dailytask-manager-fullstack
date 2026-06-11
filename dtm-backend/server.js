@@ -157,6 +157,20 @@ app.post('/createTask', async (req, res) => {
     }
 })
 
+// get task section id
+app.get('/getTask/:sectionId', async (req, res) => {
+
+    try {
+        const { section_id } = req.params;
+        const result = await pool.query('SELECT * FROM tasks WHERE section_id = $1 ORDER BY id ASC', [ section_id ])
+        res.json(result.rows)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
+
 const PORT = 3004;
 app.listen(PORT, () => {
     console.log(`Jem! your server is running on port ${PORT}`)

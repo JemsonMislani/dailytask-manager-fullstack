@@ -77,7 +77,7 @@ export default function TaskSection(){
                             >
                         <button 
                             className="text-1xl cursor-pointer"
-                            onClick={() => nav('/addtask')}>Add task ➕</button>
+                            onClick={() => nav(`/addtask/${sec.id}`)}>Add task ➕</button>
                         </div>
                         <div 
                             className="text-left border border-1 p-2 rounded bg-sky-800 text-white overflow-hidden">

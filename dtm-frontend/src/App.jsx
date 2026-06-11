@@ -15,7 +15,7 @@ export default function App() {
         <Route path='/create' element={<CreateAcc />}/>
         <Route path='/success' element={<Dashboard />}/>
         <Route path='/tasksection' element={<TaskSection />}/>
-        <Route path='/addtask' element={<CreateTask />}/>
+        <Route path="/addtask/:section_id" element={<CreateTask />} />
       </Routes>
       </BrowserRouter>
     </>

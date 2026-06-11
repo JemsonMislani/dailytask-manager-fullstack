@@ -2,15 +2,16 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useParams } from "react-router-dom";
 
 
 export default function CreateTask() {
     const [task, setTask] = useState([])
     const [userId, setUserId] = useState(null)
-    const [secId, setSecId] = useState(null)
     const [todo, setTodo] = useState('')
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
+    const { section_id } = useParams()
 
     useEffect(() => {
         axios.get('http://localhost:3004/getTask',)
@@ -28,7 +29,7 @@ export default function CreateTask() {
         }
         axios.post('http://localhost:3004/createTask', {
             user_id: userId,
-            section_id: secId,
+            section_id: section_id,
             task_name: todo,
             due_date: date,
             due_time: time,
@@ -59,7 +60,25 @@ export default function CreateTask() {
                 hour12: true
             })
         }
-        
+
+        useEffect(() => {
+            axios.get('http://localhost:3004/getTask')
+            .then(result => {
+                const findSecId = result.data.filter(f => f.section_id === Number(section_id))
+
+                setTask(findSecId)
+            })
+            .catch(err => console.log(err))
+        }, [section_id])
+
+        useEffect(() => {
+            axios.get('http://localhost:3004/getTask/' + section_id)
+            .then(result => {
+                setTask(result.data)
+            })
+            .catch(err => console.log(err))
+        }, [section_id])
+
 
     return(
         <>
