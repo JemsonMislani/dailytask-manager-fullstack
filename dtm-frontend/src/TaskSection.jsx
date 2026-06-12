@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
 
 export default function TaskSection(){
     const [section, setSection] = useState([])
@@ -10,6 +11,9 @@ export default function TaskSection(){
     const [title, setTitle] = useState('')
     const [notes, setNotes] = useState('')
     const nav = useNavigate()
+    const [userId, setUserId] = useState(null)
+    const [task, setTask] = useState([])
+    const [alltask, setAllTask] = useState([])
 
     useEffect(() => {
     axios.get('http://localhost:3004/getSection',)
@@ -48,6 +52,27 @@ export default function TaskSection(){
         .catch(err => console.log(err))
     }
 
+    useEffect(() => {
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+        if(token){
+            const decoded = jwtDecode(token);
+            setUserId(decoded.id);
+        }
+    }, [])
+
+    useEffect(() => {
+      if(!userId){
+        return
+      }
+        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        .then(result => {
+          setAllTask(result.data)
+          const completedTask = result.data.filter(t => t.completed === true)
+          setTask(completedTask)
+        })
+      .catch(err => console.log(err))
+    }, [userId])
+
     return(
         <>
      <div className="flex h-screen bg-gray-100">
@@ -56,8 +81,12 @@ export default function TaskSection(){
           <nav className="flex-1 p-4 space-y-2">
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
             <Link to={'/tasksection'}className="block px-4 py-2 rounded hover:bg-gray-700">Task section</Link>
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed</a>
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending</a>
+            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed : 
+                <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-green-700 font-bold">{task.length}</label>
+            </a>
+            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
+                <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
+            </a>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani

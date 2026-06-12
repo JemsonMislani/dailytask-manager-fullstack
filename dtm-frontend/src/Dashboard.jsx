@@ -10,6 +10,8 @@ export default function Dashboard() {
   const [userId, setUserId] = useState(null)
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
+  const [alltask, setAllTask] = useState([])
+  const [task, setTask] = useState([])
 
   const handleAddSecBtn = () => {
     if(!title || !desc){
@@ -40,6 +42,19 @@ export default function Dashboard() {
     }
   }, [])
 
+    useEffect(() => {
+      if(!userId){
+        return
+      }
+        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        .then(result => {
+          setAllTask(result.data)
+          const completedTask = result.data.filter(t => t.completed === true)
+          setTask(completedTask)
+        })
+      .catch(err => console.log(err))
+    }, [userId])
+
   return (
     <>
       <div className="flex h-screen bg-gray-100">
@@ -48,8 +63,11 @@ export default function Dashboard() {
           <nav className="flex-1 p-4 space-y-2">
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
             <Link to={'/tasksection'}className="block px-4 py-2 rounded hover:bg-gray-700">Task section</Link>
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed</a>
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending</a>
+            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed :
+              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-green-700 font-bold">{task.length}</label>
+            </a>
+            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
+              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label></a>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani

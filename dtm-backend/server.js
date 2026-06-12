@@ -206,6 +206,7 @@ app.put('/updateTask/:id', async (req, res) => {
     }
 })
 
+// delete task by id
 app.delete('/deleteTask/:id', async (req, res) => {
 
     try {
@@ -221,6 +222,21 @@ app.delete('/deleteTask/:id', async (req, res) => {
     }
 })
 
+// get task of user_id
+app.get('/getTask', async (req, res) => {
+
+    try {
+        const { user_id } = req.query;
+        if(user_id){
+            const result = await pool.query('SELECT id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at FROM tasks WHERE user_id = $1 ORDER BY id ASC ', [ user_id ])
+            return res.json(result.rows)
+        }
+        res.json([])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
 
 const PORT = 3004;
 app.listen(PORT, () => {
