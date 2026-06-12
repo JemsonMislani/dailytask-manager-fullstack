@@ -13,6 +13,10 @@ export default function CreateTask() {
     const [time, setTime] = useState('')
     const { section_id } = useParams()
     const [getTitle, setGetTitle] = useState('')
+    const [findId, setFindId] = useState(null)
+    const [editTodo, setEditTodo] = useState('')
+    const [editDate, setEditDate] = useState('')
+    const [editTime, setEditTime] = useState('')
 
     useEffect(() => {
         if (!section_id) 
@@ -61,13 +65,17 @@ export default function CreateTask() {
         }
         }, []);
 
-        const formatTime = (time) => {
-            return new Date(`1999-02-11T${time}`).toLocaleTimeString('en-PH', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            })
-        }
+    const formatTime = (time) => {
+        if (!time) return '';
+        // Since due_time is already TIME type, direct pass to Date object won't cause issues
+        // But to be safe, handle both string and object
+        const timeStr = typeof time === 'string' ? time : '00:00:00';
+        return new Date(`1999-02-11T${timeStr}`).toLocaleTimeString('en-PH', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        })
+    }
 
         useEffect(() => {
             axios.get('http://localhost:3004/getSection/' + section_id)
@@ -76,6 +84,37 @@ export default function CreateTask() {
             })
             .catch(err => console.log(err))
         }, [])
+
+        const clickEdit = (t) => {
+            setFindId(t.id)
+            setEditTodo(t.task_name)
+            setEditDate(t.due_date)
+            setEditTime(t.due_time?.slice(0, 5))
+        }
+
+        const handleSaveBtn = (id) => {
+            if (!editTodo || !editDate || !editTime) {
+                alert("Please fill out all fields");
+                return;
+            }
+            axios.put('http://localhost:3004/updateTask/' + id, {
+                task_name: editTodo,
+                due_date: editDate, 
+                due_time: editTime,
+                completed: false
+            })
+            .then(result => {
+                setTask(prev => prev.map(t => t.id === id 
+                    ?
+                result.data : t
+                ))
+                setFindId(null)
+                setEditTodo('')
+                setEditDate('')
+                setEditTime('')
+            })
+            .catch(err => console.log(err))
+        }
 
     return(
         <>
@@ -109,20 +148,53 @@ export default function CreateTask() {
                     <div 
                         key={t.id}
                         className="flex justify-center items-center">
+                        {
+                            findId === t.id ? 
+                            (<>
+                            <div className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100 font-semibold">
+                                <input 
+                                    className="border p-2 rounded"
+                                    type="text" 
+                                    value={editTodo}
+                                    onChange={(e) => setEditTodo(e.target.value)}/>
+                                <input 
+                                    className="border p-2 rounded"
+                                    type="date"
+                                    value={editDate} 
+                                    onChange={(e) => setEditDate(e.target.value)}/>
+                                <input 
+                                    className="border p-2 rounded"
+                                    type="time"
+                                    value={editTime} 
+                                    onChange={(e) => setEditTime(e.target.value)}/>
+                                <div>                                    <button        
+                                        className="text-green-700 mr-1 cursor-pointer hover:bg-green-700 hover:text-white transition transform hover:scale-105 py-2 px-4 rounded"
+                                        onClick={() => handleSaveBtn(t.id)}>save</button>
+                                    <button 
+                                        className="text-red-700 hover:bg-red-700 hover:text-white transition transform hover:scale-105 cursor-pointer py-2 px-4 rounded"
+                                        onClick={() => setFindId(null)}>close</button>
+                                </div>
+                            </div>
+                            </>) 
+                            : 
+                            (<>
                         <div
                             className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100"
                         >
                             <span className="font-semibold rounded p-2 bg-gray-300">
-                                {t.task_name} • {t.due_date?.split('T')[0]} • {formatTime(t.due_time)}
+                                {t.task_name} • {t.due_date} • {formatTime(t.due_time)}
                             </span>
 
                             <button 
-                                className="py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500">Edit</button>
+                                className="py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500"
+                                onClick={() => clickEdit(t)}>Edit</button>
                             <button 
                                 className="py-2 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700">Completed</button>
                             <button 
                                 className="py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700">Delete</button>
                         </div>
+                            </>)
+                        }
                     </div>
                     ))
                 }
