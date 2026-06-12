@@ -206,6 +206,21 @@ app.put('/updateTask/:id', async (req, res) => {
     }
 })
 
+app.delete('/deleteTask/:id', async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM tasks WHERE id=$1 RETURNING *', [ id ])
+        if(result.rows.length === 0){
+            return res.status(404).json({message: 'Task not found'})
+        }
+        res.json({message: 'Task removed', task_name: result.rows[0]})
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 
 const PORT = 3004;
 app.listen(PORT, () => {

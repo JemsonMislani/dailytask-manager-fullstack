@@ -131,6 +131,15 @@ export default function CreateTask() {
             .catch(err => console.log(err))
         }
 
+        const handleDeleteBtn = (id) => {
+            axios.delete('http://localhost:3004/deleteTask/' + id)
+            .then(result => {
+                setTask(prev => prev.filter(t => t.id !== id))
+                console.log(result.data)
+            })
+            .catch(err => console.log(err))
+        }
+
     return(
         <>
             <div className="flex justify-center items-center h-40">
@@ -212,7 +221,8 @@ export default function CreateTask() {
                                 className="py-2 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700"
                                 onClick={() => handleCompletedBtn(t.id)}>{t.completed ? 'Undo Task' : 'Completed'}</button>
                             <button 
-                                className="py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700">Delete</button>
+                                className="py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700"
+                                onClick={() => handleDeleteBtn(t.id)}>Delete</button>
                         </div>
                             </>)
                         }
