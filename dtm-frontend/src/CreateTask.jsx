@@ -67,8 +67,6 @@ export default function CreateTask() {
 
     const formatTime = (time) => {
         if (!time) return '';
-        // Since due_time is already TIME type, direct pass to Date object won't cause issues
-        // But to be safe, handle both string and object
         const timeStr = typeof time === 'string' ? time : '00:00:00';
         return new Date(`1999-02-11T${timeStr}`).toLocaleTimeString('en-PH', {
             hour: '2-digit',

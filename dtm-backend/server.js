@@ -174,14 +174,17 @@ app.post('/createTask', async (req, res) => {
 app.get('/getTask/:sectionId', async (req, res) => {
 
     try {
-        const { sectionId  } = req.params;
-        const result = await pool.query('SELECT * FROM tasks WHERE section_id = $1 ORDER BY id ASC', [ sectionId ])
-        res.json(result.rows)
+        const { sectionId } = req.params;
+        const result = await pool.query(
+            'SELECT id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at FROM tasks WHERE section_id = $1 ORDER BY id ASC', 
+            [ sectionId ]
+        );
+        res.json(result.rows);
     } catch (error) {
-        console.log(error)
-        res.status(500).send('Server Error')
+        console.log(error);
+        res.status(500).send('Server Error');
     }
-})
+});
 
 // update/edit task by id
 app.put('/updateTask/:id', async (req, res) => {
@@ -190,7 +193,7 @@ app.put('/updateTask/:id', async (req, res) => {
         const { id } = req.params;
         const { task_name, due_date, due_time, completed } = req.body;
 
-        const result = await pool.query('UPDATE tasks SET task_name = $1, due_date=$2, due_time=$3, completed=$4 WHERE id=$5 RETURNING *', [
+        const result = await pool.query('UPDATE tasks SET task_name = $1, due_date=$2, due_time=$3, completed=$4 WHERE id=$5 RETURNING id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at', [
             task_name, due_date, due_time, completed, id
         ])
         if(result.rows.length === 0){
