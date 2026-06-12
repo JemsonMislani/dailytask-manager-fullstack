@@ -113,6 +113,23 @@ export default function CreateTask() {
             })
             .catch(err => console.log(err))
         }
+        
+        const handleCompletedBtn = (id) => {
+            const toUpdate = task.find(tu => tu.id === id)
+            axios.put('http://localhost:3004/updateTask/' + id, {
+                task_name: toUpdate.task_name, 
+                due_date: toUpdate.due_date, 
+                due_time: toUpdate.due_time, 
+                completed: !toUpdate.completed
+            })
+            .then(result => {
+                setTask(prev => prev.map(t => t.id === id 
+                    ?
+                result.data : t
+                ))
+            })
+            .catch(err => console.log(err))
+        }
 
     return(
         <>
@@ -179,7 +196,12 @@ export default function CreateTask() {
                         <div
                             className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100"
                         >
-                            <span className="font-semibold rounded p-2 bg-gray-300">
+                            <span 
+                                className="font-semibold rounded p-2 bg-gray-300"
+                                style={{
+                                textDecoration: t.completed ? 'line-through' : 'none',
+                                color: t.completed ? '#585c63' : '#111827'
+                            }}>
                                 {t.task_name} • {t.due_date} • {formatTime(t.due_time)}
                             </span>
 
@@ -187,7 +209,8 @@ export default function CreateTask() {
                                 className="py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500"
                                 onClick={() => clickEdit(t)}>Edit</button>
                             <button 
-                                className="py-2 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700">Completed</button>
+                                className="py-2 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700"
+                                onClick={() => handleCompletedBtn(t.id)}>{t.completed ? 'Undo Task' : 'Completed'}</button>
                             <button 
                                 className="py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700">Delete</button>
                         </div>
