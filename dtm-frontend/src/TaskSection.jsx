@@ -81,12 +81,12 @@ export default function TaskSection(){
           <nav className="flex-1 p-4 space-y-2">
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
             <Link to={'/tasksection'}className="block px-4 py-2 rounded hover:bg-gray-700">Task section</Link>
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed : 
-                <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-green-700 font-bold">{task.length}</label>
-            </a>
-            <a href="#" className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
-                <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
-            </a>
+            <Link to={'/completedtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed :
+              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-green-700 font-bold">{task.length}</label>
+            </Link>
+            <Link to={'/pendingtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
+              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
+            </Link>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani
