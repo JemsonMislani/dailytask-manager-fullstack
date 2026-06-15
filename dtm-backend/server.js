@@ -252,6 +252,20 @@ app.get('/getSectionsWithCompleted', async (req, res) => {
     }
 })
 
+// get section with incomplete(false) task
+app.get('/getSectionsWithIncomplete', async(req, res) => {
+
+    try {
+        const { user_id } = req.query;
+        const parsedUserId = parseInt(user_id)
+        const result = await pool.query('SELECT DISTINCT s.id, s.title, s.description FROM sections s INNER JOIN tasks t ON s.id = t.section_id AND s.user_id = t.user_id WHERE s.user_id = $1 AND t.completed = false ORDER BY s.id ASC', [ parsedUserId ])
+        res.json(result.rows)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 const PORT = 3004;
 app.listen(PORT, () => {
     console.log(`Jem! your server is running on port ${PORT}`)
