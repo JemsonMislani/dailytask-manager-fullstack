@@ -7,6 +7,8 @@ import axios from 'axios';
 export default function TaskCompleted() {
     const [section, setSection] = useState([])
     const [userId, setUserId] = useState(null)
+    const [task, setTask] = useState([])
+    const [alltask, setAllTask] = useState([])
     const nav = useNavigate()
 
     useEffect(() => {
@@ -25,6 +27,20 @@ export default function TaskCompleted() {
         .catch(err => console.log(err))
     }, [userId])
     
+
+    useEffect(() => {
+      if(!userId){
+        return
+      }
+        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        .then(result => {
+          setAllTask(result.data)
+          const completedTask = result.data.filter(t => t.completed === true)
+          setTask(completedTask)
+        })
+      .catch(err => console.log(err))
+    }, [userId])
+
     return(
         <>
      <div className="flex h-screen bg-gray-100">
@@ -34,10 +50,10 @@ export default function TaskCompleted() {
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
             <Link to={'/tasksection'}className="block px-4 py-2 rounded hover:bg-gray-700">Task section</Link>
             <Link to={'/completedtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700" >Task Completed :
-              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-green-700 font-bold"></label>
+              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-green-700 font-bold">{task.length}</label>
             </Link>
             <Link to={'/pendingtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
-              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold"></label>
+              <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
             </Link>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
