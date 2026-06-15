@@ -22,8 +22,8 @@ export default function App() {
       <Route path="/addtask/:section_id" element={<CreateTask />} />
       <Route path='/completedtaskpage' element={<TaskCompleted />}/>
       <Route path='/pendingtaskpage' element={<TaskPending />}/>
-      <Route path='/completedtaskslists/:id' element={<CompletedTasksLists />}/>
-      <Route path='/pendingtaskslists/:id' element={<PendingTasksLists/>}/>
+      <Route path='/completedtaskslists/:section_id' element={<CompletedTasksLists />}/>
+      <Route path='/pendingtaskslists/:section_id' element={<PendingTasksLists/>}/>
     </Routes>
     </BrowserRouter>
     </>

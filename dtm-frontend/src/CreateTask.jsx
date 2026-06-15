@@ -75,6 +75,16 @@ export default function CreateTask() {
         })
     }
 
+    const formatDate = (date) => {
+        if (!date) return '';
+
+        return new Date(date).toLocaleDateString('en-PH', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+        });
+    };
+
         useEffect(() => {
             axios.get('http://localhost:3004/getSection/' + section_id)
             .then(result => {
@@ -211,7 +221,7 @@ export default function CreateTask() {
                                 textDecoration: t.completed ? 'line-through' : 'none',
                                 color: t.completed ? '#585c63' : '#111827'
                             }}>
-                                {t.task_name} • {t.due_date} • {formatTime(t.due_time)}
+                                {t.task_name} • {formatDate(t.due_date)} • {formatTime(t.due_time)}
                             </span>
 
                             <button 
