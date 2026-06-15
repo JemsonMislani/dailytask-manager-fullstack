@@ -20,6 +20,9 @@ export default function TaskCompleted() {
     }, [])
 
     useEffect(() => {
+      if(!userId){
+        return
+      }
         axios.get('http://localhost:3004/getSectionsWithCompleted?user_id=' + userId)
         .then(result => {
             setSection(result.data)
