@@ -6,6 +6,8 @@ import TaskSection from './TaskSection'
 import CreateTask from './CreateTask'
 import TaskCompleted from './TaskCompletedPage'
 import TaskPending from './TaskPendingPage'
+import CompletedTasksLists from './CompletedTasksLists'
+import PendingTasksLists from './PendingTasksLists'
 
 export default function App() {
 
@@ -20,6 +22,8 @@ export default function App() {
       <Route path="/addtask/:section_id" element={<CreateTask />} />
       <Route path='/completedtaskpage' element={<TaskCompleted />}/>
       <Route path='/pendingtaskpage' element={<TaskPending />}/>
+      <Route path='/completedtaskslists/:id' element={<CompletedTasksLists />}/>
+      <Route path='/pendingtaskslists/:id' element={<PendingTasksLists/>}/>
     </Routes>
     </BrowserRouter>
     </>

@@ -73,7 +73,7 @@ export default function TaskCompleted() {
                     key={sec.id}
                     className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
                     style={{ width: '3in', height: '1.5in' }}
-                    onClick={() => nav(`/completedtasks/${sec.id}`)}
+                    onClick={() => nav(`/completedtaskslists/${sec.id}`)}
                 >
                 <div>
                     <h1 className="font-bold text-lg">{sec.title}</h1>

@@ -71,7 +71,7 @@ export default function TaskPending() {
                     <div key={sec.id}
                     className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
                     style={{ width: '3in', height: '1.5in' }}
-                    onClick={() => nav(`/incompletetasks/${sec.id}`)}>
+                    onClick={() => nav(`/pendingtaskslists/${sec.id}`)}>
                         
                     <div>
                         <h1 className="font-bold text-lg">{sec.title}</h1>
