@@ -52,7 +52,12 @@ export default function TaskSection(){
     }
 
     const handleDelBtn = (id) => {
-        axios.delete('http://localhost:3004/deleteSection/' + id)
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+        axios.delete('http://localhost:3004/deleteSection/' + id, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(result => {
             setSection(prev => prev.filter(sec => sec.id !== id))
             console.log(result)

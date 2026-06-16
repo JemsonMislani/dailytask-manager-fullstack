@@ -139,11 +139,12 @@ app.get('/getSection', verifyToken, async (req, res) => {
 })
 
 // get section title using id
-app.get('/getSection/:id', async (req, res) => {
+app.get('/getSection/:id', verifyToken, async (req, res) => {
     
     try {
         const { id } = req.params
-        const result = await pool.query('SELECT * FROM sections WHERE id = $1', [ id ])
+        const userId = req.user.id;
+        const result = await pool.query('SELECT * FROM sections WHERE id = $1 AND user_id = $2', [ id, userId ])
         res.json(result.rows[0])
     } catch (error) {
         console.log(error)
@@ -152,13 +153,14 @@ app.get('/getSection/:id', async (req, res) => {
 })
 
 // edit section 
-app.put('/editSection/:id', async (req, res) => {
+app.put('/editSection/:id', verifyToken,  async (req, res) => {
 
     try {
         const { id } = req.params;
+        const userId = req.user.id;
         const { title, description } = req.body
-        const result = await pool.query('UPDATE sections SET title=$1, description=$2 WHERE id=$3 RETURNING *', [
-            title, description, id
+        const result = await pool.query('UPDATE sections SET title=$1, description=$2 WHERE id=$3 AND user_id=$4 RETURNING*', [
+            title, description, id, userId
         ])
         if(result.rows.length === 0){
             return res.status(404).json({message: 'Section not found'})
@@ -171,11 +173,12 @@ app.put('/editSection/:id', async (req, res) => {
 })
 
 // delete section
-app.delete('/deleteSection/:id', async(req, res) => {
+app.delete('/deleteSection/:id', verifyToken, async(req, res) => {
 
     try {
         const { id } = req.params;
-        const result = await pool.query('DELETE FROM sections WHERE id=$1 RETURNING *', [ id ])
+        const userId = req.user.id;
+        const result = await pool.query('DELETE FROM sections WHERE id=$1 AND user_id=$2 RETURNING *', [ id, userId ])
         if(result.rows.length === 0){
             return res.status(404).json({message: 'Section not found'})
         }
