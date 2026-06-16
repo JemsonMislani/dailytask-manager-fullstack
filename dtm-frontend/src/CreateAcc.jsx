@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 export default function CreateAcc() {
-  const [user, setUser] = useState([])
+  const [user, setUser] = useState(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -17,7 +17,7 @@ export default function CreateAcc() {
       email: email, password: password
     })
     .then(result => {
-      setUser([...user, result.data.user])
+      setUser(result.data)
       setEmail('')
       setPassword('')
     })

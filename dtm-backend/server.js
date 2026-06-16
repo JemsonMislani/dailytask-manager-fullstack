@@ -17,46 +17,83 @@ const pool = new Pool({
     port: 5432
 })
 
+// JWT middle ware.
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(403).json({ message: "Invalid token" });
+    }
+};
+
 // FOR USERS
 
 // create user account
 app.post('/createAcc', async (req, res) => {
     try {
         const { email, password } = req.body;
-        const hashedPw = await bcrypt.hash(password, 10)
-        const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *', [
-            email, hashedPw
-        ])
-        res.json(result.rows[0])
+        if(!email || !password){
+            return res.status(400).json({message: 'Please fill out fields'})
+        }
+        const cleanEmail = email.toLowerCase().trim();
+        const accExist = await pool.query('SELECT id FROM users WHERE email=$1', [cleanEmail])
+        if(accExist.rows.length > 0){
+            return res.status(400).json({message: 'Email already exist.'})
+        }
+        const hashedPw = await bcrypt.hash(password, 10);
+        const result = await pool.query(
+            'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email',
+            [cleanEmail, hashedPw]
+        );
+
+        res.json(result.rows[0]);
     } catch (error) {
-        console.log(error)
-        res.status(500).send('Server Error')
+        console.log(error);
+        res.status(500).send('Server Error');
     }
-})
+});
 
 // create login, validate acc
 app.post('/createLogin', async (req, res) => {
     try {
         const { email, password } = req.body;
-        const result = await pool.query('SELECT * FROM users WHERE email=$1', [ email ])
+        const cleanEmail = email.toLowerCase().trim();
+        const result = await pool.query('SELECT * FROM users WHERE email=$1', [ cleanEmail ])
         if(result.rows.length === 0){
             return res.status(400).json({message: 'User not found'})
         }
 
         const user = result.rows[0]
-        const isMatch = await bcrypt.compare(password, user.password)
+        if(!user.password){
+            return res.status(500).json({message: 'Password is missing in Database'})
+        }
 
+        const isMatch = await bcrypt.compare(password, user.password)
         if(!isMatch){
             return res.status(400).json({message: 'Invalid credentials'})
         }
 
-        const token = jwt.sign({id: user.id}, 'YOUR_JWT_SECRET', {expiresIn: '1h'})
+        const token = jwt.sign(
+            {id: user.id}, 
+            'YOUR_JWT_SECRET', 
+            {expiresIn: '1h'}
+        );
         return res.json({
             token,
             user: {id: user.id, email: user.email}
         })
     } catch (error) {
-        console.log(error)
+        console.log('Login Error', error)
         res.status(500).send('Server Error')
     }
 })

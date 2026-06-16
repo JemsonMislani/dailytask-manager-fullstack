@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 export default function LoginAcc() {
-  const [user, setUser] = useState([])
+  const [user, setUser] = useState(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
@@ -42,7 +42,7 @@ export default function LoginAcc() {
                   <div className="flex flex-col justify-center items-center gap-5 not-odd:h-70">
                   <input 
                     className="focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-gray-700 py-3 px-2 w-70 border border-gray-400 rounded"
-                    type="text" 
+                    type="email" 
                     placeholder="Enter email or username"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}/>
