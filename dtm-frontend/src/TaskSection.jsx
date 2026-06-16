@@ -16,7 +16,15 @@ export default function TaskSection(){
     const [alltask, setAllTask] = useState([])
 
     useEffect(() => {
-    axios.get('http://localhost:3004/getSection',)
+    const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+    if(!token){
+        return
+    }
+    axios.get('http://localhost:3004/getSection', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
     .then(result => setSection(result.data))
     .catch(err => console.log(err))
 }, [])

@@ -108,8 +108,7 @@ app.post('/createLogin', async (req, res) => {
 app.post('/createSection', verifyToken, async (req, res) => {
 
     try {
-        console.log("REQ USER:", req.user);
-        console.log("USER ID USED:", req.user.id);
+
         const userId = req.user.id;
         const { title, description } = req.body;
         if(!title || !description){
@@ -128,10 +127,10 @@ app.post('/createSection', verifyToken, async (req, res) => {
 // FOR SECTION
 
 // get section
-app.get('/getSection', async (req, res) => {
+app.get('/getSection', verifyToken, async (req, res) => {
     try {
-        const { user_id, title, description } = req.query;
-        const result = await pool.query('SELECT * FROM sections ORDER BY id ASC')
+        const userId = req.user.id;
+        const result = await pool.query('SELECT * FROM sections WHERE user_id = $1 ORDER BY id ASC', [ userId ])
         res.json(result.rows)
     } catch (error) {
         console.log(error)
