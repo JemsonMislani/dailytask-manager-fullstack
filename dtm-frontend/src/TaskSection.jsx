@@ -35,8 +35,13 @@ export default function TaskSection(){
     }
 
     const handleSaveBtn = (id) => {
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
         axios.put('http://localhost:3004/editSection/' + id, {
             title: title, description: notes
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
         .then(result => {
             setSection(prev => prev.map(item => item.id === id
