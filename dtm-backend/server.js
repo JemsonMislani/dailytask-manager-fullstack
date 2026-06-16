@@ -192,12 +192,13 @@ app.delete('/deleteSection/:id', verifyToken, async(req, res) => {
 // FOR TASKS
 
 // create task
-app.post('/createTask', async (req, res) => {
+app.post('/createTask', verifyToken, async (req, res) => {
 
     try {
-        const { user_id, section_id, task_name, completed, due_date, due_time } = req.body
+        const userId = req.user.id;
+        const { section_id, task_name, completed, due_date, due_time } = req.body
         const result = await pool.query('INSERT INTO tasks (user_id, section_id, task_name, completed, due_date, due_time) VALUES ($1, $2, $3, $4, $5, $6) returning *', [
-            user_id, section_id, task_name, completed, due_date, due_time
+            userId, section_id, task_name, completed, due_date, due_time
         ])
         res.json(result.rows[0])
     } catch (error) {

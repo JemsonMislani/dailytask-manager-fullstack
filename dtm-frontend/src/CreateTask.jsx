@@ -35,13 +35,17 @@ export default function CreateTask() {
             alert('Please fill out all fields')
             return
         }
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
         axios.post('http://localhost:3004/createTask', {
-            user_id: userId,
             section_id: Number(section_id),
             task_name: todo,
             due_date: date,
             due_time: time,
             completed: false
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
 
         .then(() => {
