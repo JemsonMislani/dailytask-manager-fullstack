@@ -22,9 +22,12 @@ export default function Dashboard() {
   }
 
   const addSectionTitle = () => {
+    const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
     axios.post('http://localhost:3004/createSection', {
-      user_id: userId, title: title, description: desc
-    })
+      title: title, description: desc
+    }, { headers: {
+      Authorization: `Bearer ${token}`
+    }})
     .then(result => {
       setSection(prev => [...prev, result.data])
       setTitle('')

@@ -20,11 +20,13 @@ export default function LoginAcc() {
     })
     .then(result => {
       setUser(result.data.user)
-      if(remember){
-        localStorage.setItem('userstokens', result.data.token)
-      } else {
-        sessionStorage.setItem('userstokens', result.data.token)
-      }
+    if (remember) {
+      localStorage.setItem("userstokens", result.data.token);
+      sessionStorage.removeItem("userstokens");
+    } else {
+      sessionStorage.setItem("userstokens", result.data.token);
+      localStorage.removeItem("userstokens");
+    }
       nav('/success')
     })
     .catch(err => {

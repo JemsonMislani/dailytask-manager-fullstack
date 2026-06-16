@@ -3,6 +3,8 @@ const cors = require('cors')
 const { Pool } = require('pg')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+require('dotenv').config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express()
 
@@ -26,6 +28,10 @@ const verifyToken = (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
+
+    if (!token || token === "null" || token === "undefined") {
+    return res.status(401).json({ message: "Invalid token format" });
+    }
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -85,7 +91,7 @@ app.post('/createLogin', async (req, res) => {
 
         const token = jwt.sign(
             {id: user.id}, 
-            'YOUR_JWT_SECRET', 
+            JWT_SECRET, 
             {expiresIn: '1h'}
         );
         return res.json({
@@ -99,12 +105,18 @@ app.post('/createLogin', async (req, res) => {
 })
 
 // create section
-app.post('/createSection', async (req, res) => {
+app.post('/createSection', verifyToken, async (req, res) => {
 
     try {
-        const { user_id, title, description } = req.body;
+        console.log("REQ USER:", req.user);
+        console.log("USER ID USED:", req.user.id);
+        const userId = req.user.id;
+        const { title, description } = req.body;
+        if(!title || !description){
+            return res.status(400).json({message: 'Please fill out fields'})
+        }
         const result = await pool.query('INSERT INTO sections (user_id, title, description) VALUES ($1, $2, $3) RETURNING *', [
-            user_id, title, description
+            userId, title, description
         ])
         res.json(result.rows[0])
     } catch (error) {
