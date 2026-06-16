@@ -11,7 +11,6 @@ export default function TaskSection(){
     const [title, setTitle] = useState('')
     const [notes, setNotes] = useState('')
     const nav = useNavigate()
-    const [userId, setUserId] = useState(null)
     const [task, setTask] = useState([])
     const [alltask, setAllTask] = useState([])
 
@@ -67,16 +66,13 @@ export default function TaskSection(){
 
     useEffect(() => {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
-        if(token){
-            const decoded = jwtDecode(token);
-            setUserId(decoded.id);
+        if(!token){
+            return
         }
-    }, [])
 
-    useEffect(() => {
-      if(!userId){
-        return
-      }
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+
         axios.get('http://localhost:3004/getTask?user_id=' + userId)
         .then(result => {
           setAllTask(result.data)
@@ -84,7 +80,8 @@ export default function TaskSection(){
           setTask(completedTask)
         })
       .catch(err => console.log(err))
-    }, [userId])
+    }, [])
+
 
     return(
         <>
