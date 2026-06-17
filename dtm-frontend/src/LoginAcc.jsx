@@ -37,9 +37,9 @@ export default function LoginAcc() {
 
   return (
     <>
-      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-300 via-sky-100 to-orange-200 px-4'>
-        <form onSubmit={handleLoginBtn} className='w-full max-w-md'>
-          <div className='w-full max-w-md bg-white/20 backdrop-blur-xl border border-white/30 shadow-2xl rounded-2xl p-8 sm:p-10'>
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-300 via-sky-100 to-orange-200'>
+        <form onSubmit={handleLoginBtn} className='w-full max-w-mdw-full max-w-md sm:p-4'>
+          <div className='w-full min-h-screen sm:min-h-auto sm:rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 shadow-2xl p-6 sm:p-10 flex flex-col justify-center'>
               <div>
                   <div className='text-3xl font-semibold text-center mb-8 text-gray-800'>Login</div>
                   <div className='flex flex-col gap-5'>
