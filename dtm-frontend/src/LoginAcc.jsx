@@ -37,7 +37,8 @@ export default function LoginAcc() {
 
   return (
     <>
-      <form onSubmit={handleLoginBtn}>
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-200 via-white to-orange-200'>
+        <form onSubmit={handleLoginBtn}>
           <div className="flex justify-center items-center h-200">
               <div className="ring shadow-xl ring-gray-900/5 flex-col w-110 h-120 rounded">
                   <div className="flex justify-center items-center align-middle text-4xl font-semibold text-black h-30">Login</div>
@@ -73,7 +74,8 @@ export default function LoginAcc() {
                   </div>
               </div>
           </div>
-      </form>
+        </form>
+      </div>
     </>
   )
 }
