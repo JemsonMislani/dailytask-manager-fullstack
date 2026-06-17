@@ -8,6 +8,7 @@ export default function TaskPending() {
     const [task, setTask] = useState([])
     const [alltask, setAllTask] = useState([])
     const [section, setSection] = useState([])
+    const [open, setOpen] = useState(false)
     const nav = useNavigate()
 
     useEffect(() => {
@@ -56,7 +57,18 @@ export default function TaskPending() {
     return(
         <>
  <div className="flex h-screen bg-gray-100">
-        <aside className="w-64 bg-gray-900 text-white flex flex-col">
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 sm:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+        <aside className={`
+            fixed sm:static z-50 top-0 left-0 h-full w-64 bg-gray-900 text-white flex flex-col
+            transform transition-transform duration-300
+            ${open ? "translate-x-0" : "-translate-x-full"}
+            sm:translate-x-0
+          `}>
           <div className="text-2xl font-bold p-6 border-b border-gray-700">My Dashboard</div>
           <nav className="flex-1 p-4 space-y-2">
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
@@ -73,6 +85,14 @@ export default function TaskPending() {
           </div>
         </aside>
         <main className="flex-1 p-6">
+          <div className="flex items-center justify-between mb-6 sm:hidden">
+          <button
+            onClick={() => setOpen(true)}
+            className="text-2xl p-2 bg-gray-900 text-white rounded"
+          >
+            ☰
+          </button>
+        </div>
           <h1 className="text-2xl font-semibold mb-5">Task Incomplete ⌛</h1>
         {
         <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3in, max-content))' }}>
@@ -80,7 +100,7 @@ export default function TaskPending() {
                 section.map((sec) => (
                     <div key={sec.id}
                     className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
-                    style={{ width: '3in', height: '1.5in' }}
+                    style={{ width: '3.5in', height: '1.5in' }}
                     onClick={() => nav(`/pendingtaskslists/${sec.id}`)}>
                         
                     <div>

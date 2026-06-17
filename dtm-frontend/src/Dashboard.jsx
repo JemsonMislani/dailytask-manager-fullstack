@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [alltask, setAllTask] = useState([])
   const [task, setTask] = useState([])
   const [popup, setPopUp] = useState(false)
+  const [open, setOpen] = useState(false);  
 
   const handleAddSecBtn = () => {
     if(!title || !desc){
@@ -74,7 +75,18 @@ export default function Dashboard() {
   return (
     <>
       <div className="flex h-screen bg-gray-100">
-        <aside className="w-64 bg-gray-900 text-white flex flex-col">
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 sm:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+        <aside className={`
+            fixed sm:static z-50 top-0 left-0 h-full w-64 bg-gray-900 text-white flex flex-col
+            transform transition-transform duration-300
+            ${open ? "translate-x-0" : "-translate-x-full"}
+            sm:translate-x-0
+          `}>
           <div className="text-2xl font-bold p-6 border-b border-gray-700">My Dashboard</div>
           <nav className="flex-1 p-4 space-y-2">
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
@@ -91,34 +103,42 @@ export default function Dashboard() {
           </div>
         </aside>
         <main className="flex-1 p-6">
+          <div className="flex items-center justify-between mb-6 sm:hidden">
+          <button
+            onClick={() => setOpen(true)}
+            className="text-2xl p-2 bg-gray-900 text-white rounded"
+          >
+            ☰
+          </button>
+        </div>
           <h1 className="text-2xl font-semibold">Welcome, you can create a section for your list of tasks!📝</h1>
           <p className="mt-2 text-gray-600">Small tasks everyday, add up to big results.✅️</p> 
-          <div className="flex flex-row items-center">
+          <div className="flex items-center mt-6 gap-2">
             <button 
-            className="px-4 py-4 rounded m-5 ml-0 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-400"
+            className="px-4 py-4 rounded ml-0 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-400"
             onClick={() => setShowInp(!showinp)}
             >Add Section ✚
             </button>
-            {popup && (<span className="flex justify-center items-center border border-green-300 px-2 py-1 rounded text-white bg-green-700 font-0.5">Added to Task section ✅️</span>)}
+            {popup && (<span className="px-2 py-1 rounded bg-green-700 text-white text-sm">Added to section ✅️</span>)}
           </div>
             <div>
                 {
                   showinp && (
-                    <div className="flex gap-1">
+                    <div className="flex flex-col sm:flex-row gap-2 mt-4">
                       <input 
-                        className="border border-1 px-2 py-3 rounded"
+                        className="border px-3 py-2 rounded w-full sm:w-auto"
                         type="text" 
                         placeholder="Enter section name"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}/>
                       <input 
-                        className="border border-1 px-2 py-3 rounded"
+                        className="border px-3 py-2 rounded w-full sm:w-auto"
                         type="text" 
                         placeholder="Enter description"
                         value={desc}
                         onChange={(e) => setDesc(e.target.value)}/>
                       <button
-                        className="bg-green-700 px-7 text-white rounded cursor-pointer hover:bg-green-800 active:bg-green-700"
+                        className="bg-green-700 px-6 py-2 text-white rounded hover:bg-green-800"
                         onClick={(e) => { 
                           e.preventDefault();
                          if(handleAddSecBtn()){
@@ -126,7 +146,7 @@ export default function Dashboard() {
                          }
                         }}>Add</button>
                       <button
-                        className="bg-red-700 px-6 text-white rounded cursor-pointer hover:bg-red-800 active:bg-red-700"
+                        className="bg-red-700 px-6 py-2 text-white rounded hover:bg-red-800"
                         onClick={() => setShowInp(false)}>Close</button>
                     </div>
                   )

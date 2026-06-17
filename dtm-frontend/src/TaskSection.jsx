@@ -13,6 +13,7 @@ export default function TaskSection(){
     const nav = useNavigate()
     const [task, setTask] = useState([])
     const [alltask, setAllTask] = useState([])
+    const [open, setOpen] = useState(false)
     const [popup, setPopUp] = useState({
         show: false,
         message: '',
@@ -56,7 +57,7 @@ export default function TaskSection(){
             setFindSecId(null)
             setTitle('')
             setNotes('')
-            popUpMessageForSection('Section Updated✅', 'success')
+            popUpMessageForSection('Updated✅', 'success')
         })
         .catch(err => console.log(err))
     }
@@ -71,7 +72,7 @@ export default function TaskSection(){
         .then(result => {
             setSection(prev => prev.filter(sec => sec.id !== id))
             result
-            popUpMessageForSection('Section Deleted⛔', 'error')
+            popUpMessageForSection('Deleted⛔', 'error')
         })
         .catch(err => console.log(err))
     }
@@ -117,7 +118,18 @@ export default function TaskSection(){
     return(
         <>
      <div className="flex h-screen bg-gray-100">
-        <aside className="w-64 bg-gray-900 text-white flex flex-col">
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 sm:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+        <aside className={`
+            fixed sm:static z-50 top-0 left-0 h-full w-64 bg-gray-900 text-white flex flex-col
+            transform transition-transform duration-300
+            ${open ? "translate-x-0" : "-translate-x-full"}
+            sm:translate-x-0
+          `}>
           <div className="text-2xl font-bold p-6 border-b border-gray-700">My Dashboard</div>
           <nav className="flex-1 p-4 space-y-2">
             <Link to={'/success'} className="block px-4 py-2 rounded hover:bg-gray-700">Home</Link>
@@ -134,7 +146,15 @@ export default function TaskSection(){
           </div>
         </aside>
             <main className="flex-1 p-6 overflow-auto">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between mb-6 sm:hidden">
+          <button
+            onClick={() => setOpen(true)}
+            className="text-2xl p-2 bg-gray-900 text-white rounded"
+          >
+            ☰
+          </button>
+        </div>
+            <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-semibold">Tasks sections📝</h1>
                 <div>
                     { popup.show && (<p className={`popupmessage px-2 py-1 items-center rounded text-white 
@@ -148,7 +168,7 @@ export default function TaskSection(){
                     <div
                         key={sec.id}
                         className="mt-5 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
-                        style={{ width: '3in', height: '3in' }}
+                        style={{ width: '3.5in', height: '3in' }}
                     >
                         <div 
                             className="flex items-center justify-center" style={{ flex: '0 0 auto' }}
