@@ -19,10 +19,14 @@ export default function CreateTask() {
     const [editTime, setEditTime] = useState('')
 
     useEffect(() => {
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
         if (!section_id) 
             return;
-
-        axios.get('http://localhost:3004/getTask/' + section_id)
+        axios.get('http://localhost:3004/getTask/' + section_id, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(result => {
             setTask(result.data)
         })
@@ -31,11 +35,11 @@ export default function CreateTask() {
 
     const addTaskBtn = (e) => {
         e.preventDefault()
+        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
         if(!todo || !date || !time){
             alert('Please fill out all fields')
             return
         }
-        const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
         axios.post('http://localhost:3004/createTask', {
             section_id: Number(section_id),
             task_name: todo,
@@ -90,7 +94,12 @@ export default function CreateTask() {
     };
 
         useEffect(() => {
-            axios.get('http://localhost:3004/getSection/' + section_id)
+            const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+            axios.get('http://localhost:3004/getSection/' + section_id, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             .then(result => {
                 setGetTitle(result.data.title)
             })
@@ -105,15 +114,24 @@ export default function CreateTask() {
         }
 
         const handleSaveBtn = (id) => {
-            if (!editTodo || !editDate || !editTime) {
-                alert("Please fill out all fields");
-                return;
+            const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+            const currentTask = task.find(t => t.id === id)
+            if(editTodo === currentTask.task_name &&
+                editDate === currentTask.task_date &&
+                editTime === currentTask.task_time
+            ) {
+                setFindId(null)
+                return
             }
             axios.put('http://localhost:3004/updateTask/' + id, {
                 task_name: editTodo,
                 due_date: editDate, 
                 due_time: editTime,
                 completed: false
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
             .then(result => {
                 setTask(prev => prev.map(t => t.id === id 
@@ -129,12 +147,17 @@ export default function CreateTask() {
         }
         
         const handleCompletedBtn = (id) => {
+            const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
             const toUpdate = task.find(tu => tu.id === id)
             axios.put('http://localhost:3004/updateTask/' + id, {
                 task_name: toUpdate.task_name, 
                 due_date: toUpdate.due_date, 
                 due_time: toUpdate.due_time, 
                 completed: !toUpdate.completed
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             })
             .then(result => {
                 setTask(prev => prev.map(t => t.id === id 
@@ -146,10 +169,15 @@ export default function CreateTask() {
         }
 
         const handleDeleteBtn = (id) => {
-            axios.delete('http://localhost:3004/deleteTask/' + id)
+            const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+            axios.delete('http://localhost:3004/deleteTask/' + id, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
             .then(result => {
                 setTask(prev => prev.filter(t => t.id !== id))
-                console.log(result.data)
+                result.data
             })
             .catch(err => console.log(err))
         }

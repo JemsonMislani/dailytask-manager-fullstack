@@ -37,8 +37,8 @@ export default function Dashboard() {
     .catch(err => console.log(err))
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
+    useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
     if(token){
       const decoded = jwtDecode(token)
       setUserId(decoded.id)
@@ -46,10 +46,15 @@ export default function Dashboard() {
   }, [])
 
     useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        axios.get('http://localhost:3004/getTask?user_id=' + userId, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then(result => {
           setAllTask(result.data)
           const completedTask = result.data.filter(t => t.completed === true)

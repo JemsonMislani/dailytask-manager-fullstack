@@ -19,10 +19,15 @@ export default function TaskPending() {
     }, [])
 
     useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getSectionsWithIncomplete?user_id=' + userId)
+        axios.get('http://localhost:3004/getSectionsWithIncomplete?user_id=' + userId, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then(result => {
             setSection(result.data)
         })
@@ -30,10 +35,15 @@ export default function TaskPending() {
     }, [userId])
 
     useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        axios.get('http://localhost:3004/getTask?user_id=' + userId, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then(result => {
           setAllTask(result.data)
           const completedTask = result.data.filter(t => t.completed === true)

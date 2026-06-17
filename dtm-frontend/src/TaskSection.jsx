@@ -78,7 +78,11 @@ export default function TaskSection(){
         const decoded = jwtDecode(token);
         const userId = decoded.id;
 
-        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        axios.get('http://localhost:3004/getTask?user_id=' + userId, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(result => {
           setAllTask(result.data)
           const completedTask = result.data.filter(t => t.completed === true)

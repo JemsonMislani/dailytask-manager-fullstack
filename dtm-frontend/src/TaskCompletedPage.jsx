@@ -20,10 +20,15 @@ export default function TaskCompleted() {
     }, [])
 
     useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getSectionsWithCompleted?user_id=' + userId)
+        axios.get('http://localhost:3004/getSectionsWithCompleted', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then(result => {
             setSection(result.data)
         })
@@ -32,10 +37,15 @@ export default function TaskCompleted() {
     
 
     useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        axios.get('http://localhost:3004/getTask', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then(result => {
           setAllTask(result.data)
           const completedTask = result.data.filter(t => t.completed === true)

@@ -17,10 +17,15 @@ export default function PendingTasksLists(){
     }, [])
 
     useEffect(() => {
+      const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
       if(!userId || !section_id){
         return
       }
-        axios.get('http://localhost:3004/getTask?user_id=' + userId)
+        axios.get('http://localhost:3004/getTask', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(result => {
           const completedTask = result.data.filter(t => t.completed === false && t.section_id === Number(section_id))
           setTask(completedTask)

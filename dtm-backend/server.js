@@ -92,7 +92,7 @@ app.post('/createLogin', async (req, res) => {
         const token = jwt.sign(
             {id: user.id}, 
             JWT_SECRET, 
-            {expiresIn: '1h'}
+            {expiresIn: '24h'}
         );
         return res.json({
             token,
@@ -208,13 +208,14 @@ app.post('/createTask', verifyToken, async (req, res) => {
 })
 
 // get task section id
-app.get('/getTask/:sectionId', async (req, res) => {
+app.get('/getTask/:sectionId', verifyToken, async (req, res) => {
 
     try {
         const { sectionId } = req.params;
+        const userId = req.user.id;
         const result = await pool.query(
-            'SELECT id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at FROM tasks WHERE section_id = $1 ORDER BY id ASC', 
-            [ sectionId ]
+            'SELECT id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at FROM tasks WHERE section_id = $1 AND user_id=$2 ORDER BY id ASC', 
+            [ sectionId, userId ]
         );
         res.json(result.rows);
     } catch (error) {
@@ -224,14 +225,15 @@ app.get('/getTask/:sectionId', async (req, res) => {
 });
 
 // update/edit task by id
-app.put('/updateTask/:id', async (req, res) => {
+app.put('/updateTask/:id', verifyToken, async (req, res) => {
 
     try {
         const { id } = req.params;
+        const userId = req.user.id;
         const { task_name, due_date, due_time, completed } = req.body;
 
-        const result = await pool.query('UPDATE tasks SET task_name = $1, due_date=$2, due_time=$3, completed=$4 WHERE id=$5 RETURNING id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at', [
-            task_name, due_date, due_time, completed, id
+        const result = await pool.query('UPDATE tasks SET task_name = $1, due_date=$2, due_time=$3, completed=$4 WHERE id=$5 AND user_id=$6 RETURNING *', [
+            task_name, due_date, due_time, completed, id, userId
         ])
         if(result.rows.length === 0){
             return res.status(404).json({message: 'Task not found'})
@@ -244,11 +246,12 @@ app.put('/updateTask/:id', async (req, res) => {
 })
 
 // delete task by id
-app.delete('/deleteTask/:id', async (req, res) => {
+app.delete('/deleteTask/:id', verifyToken, async (req, res) => {
 
     try {
         const { id } = req.params;
-        const result = await pool.query('DELETE FROM tasks WHERE id=$1 RETURNING *', [ id ])
+        const userId = req.user.id;
+        const result = await pool.query('DELETE FROM tasks WHERE id=$1 AND user_id=$2 RETURNING *', [ id, userId ])
         if(result.rows.length === 0){
             return res.status(404).json({message: 'Task not found'})
         }
@@ -260,15 +263,13 @@ app.delete('/deleteTask/:id', async (req, res) => {
 })
 
 // get task of user_id
-app.get('/getTask', async (req, res) => {
+app.get('/getTask', verifyToken, async (req, res) => {
 
     try {
-        const { user_id } = req.query;
-        if(user_id){
-            const result = await pool.query('SELECT id, user_id, section_id, task_name, completed, due_date::text as due_date, due_time::text as due_time, created_at, updated_at FROM tasks WHERE user_id = $1 ORDER BY id ASC ', [ user_id ])
+        const userId = req.user.id;
+        const result = await pool.query('SELECT * FROM tasks WHERE user_id = $1 ORDER BY id ASC ', [ userId ])
             return res.json(result.rows)
-        }
-        res.json([])
+        return res.json(result.rows)
     } catch (error) {
         console.log(error)
         res.status(500).send('Server Error')
@@ -276,12 +277,11 @@ app.get('/getTask', async (req, res) => {
 })
 
 // get section with completed(true) task
-app.get('/getSectionsWithCompleted', async (req, res) => {
+app.get('/getSectionsWithCompleted', verifyToken, async (req, res) => {
 
     try {
-        const { user_id } = req.query;
-        const parsedUserId = parseInt(user_id)
-        const result = await pool.query('SELECT DISTINCT s.id, s.title, s.description FROM sections s INNER JOIN tasks t ON s.id = t.section_id AND s.user_id = t.user_id WHERE s.user_id = $1 AND t.completed = true ORDER BY s.id ASC', [ parsedUserId ])
+        const userId = req.user.id;
+        const result = await pool.query('SELECT DISTINCT s.id, s.title, s.description FROM sections s INNER JOIN tasks t ON s.id = t.section_id WHERE s.user_id = $1 AND t.completed = true ORDER BY s.id ASC', [ userId ])
         res.json(result.rows)
     } catch (error) {
         console.log(error)
@@ -290,12 +290,11 @@ app.get('/getSectionsWithCompleted', async (req, res) => {
 })
 
 // get section with incomplete(false) task
-app.get('/getSectionsWithIncomplete', async(req, res) => {
+app.get('/getSectionsWithIncomplete', verifyToken, async(req, res) => {
 
     try {
-        const { user_id } = req.query;
-        const parsedUserId = parseInt(user_id)
-        const result = await pool.query('SELECT DISTINCT s.id, s.title, s.description FROM sections s INNER JOIN tasks t ON s.id = t.section_id AND s.user_id = t.user_id WHERE s.user_id = $1 AND t.completed = false ORDER BY s.id ASC', [ parsedUserId ])
+        const userId = req.user.id;
+        const result = await pool.query('SELECT DISTINCT s.id, s.title, s.description FROM sections s INNER JOIN tasks t ON s.id = t.section_id WHERE s.user_id = $1 AND t.completed = false ORDER BY s.id ASC', [ userId ])
         res.json(result.rows)
     } catch (error) {
         console.log(error)
