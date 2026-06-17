@@ -163,7 +163,7 @@ export default function TaskSection(){
                     }`}>{popup.message}</p>)}
                 </div>
             </div>
-                <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3in, max-content))' }}>
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center">
                     {section.map(sec => (
                     <div
                         key={sec.id}

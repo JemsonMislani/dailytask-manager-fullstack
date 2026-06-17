@@ -96,13 +96,11 @@ export default function TaskCompleted() {
         </div>
           <h1 className="text-2xl font-semibold mb-5">Task completed ✅️</h1>
         {
-            <div 
-                className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3in, max-content))' }}>
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center">
                 {section.map(sec => (
                 <div
                     key={sec.id}
-                    className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
-                    style={{ width: '3.5in', height: '1.5in' }}
+                    className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer w-full h-[180px]"
                     onClick={() => nav(`/completedtaskslists/${sec.id}`)}
                 >
                 <div>
