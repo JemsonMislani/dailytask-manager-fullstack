@@ -17,6 +17,11 @@ export default function CreateTask() {
     const [editTodo, setEditTodo] = useState('')
     const [editDate, setEditDate] = useState('')
     const [editTime, setEditTime] = useState('')
+    const [popup, setPopUp] = useState({
+        show: false,
+        message: '',
+        type: ''
+    })
 
     useEffect(() => {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
@@ -65,6 +70,7 @@ export default function CreateTask() {
             setTodo('')
             setDate('')
             setTime('')
+            popUpMessageForTask('Task Added✅', 'success')
         })
         .catch(err => console.log(err))
     }
@@ -147,6 +153,7 @@ export default function CreateTask() {
                 setEditTodo('')
                 setEditDate('')
                 setEditTime('')
+                popUpMessageForTask('Task updated✅', 'success')
             })
             .catch(err => console.log(err))
         }
@@ -169,6 +176,7 @@ export default function CreateTask() {
                     ?
                 result.data : t
                 ))
+                popUpMessageForTask(toUpdate.completed ? 'Task Undo✅' : 'Task completed✅',  'success')
             })
             .catch(err => console.log(err))
         }
@@ -183,12 +191,36 @@ export default function CreateTask() {
             .then(result => {
                 setTask(prev => prev.filter(t => t.id !== id))
                 result.data
+                popUpMessageForTask('Task deleted⛔', 'error')
             })
             .catch(err => console.log(err))
         }
 
+        const popUpMessageForTask =(message, type) => {
+            setPopUp({
+                show: true,
+                message,
+                type
+            })
+            setTimeout(() => {
+                setPopUp({
+                    show: false,
+                    message: '',
+                    type: ''
+                })
+            }, 2000)
+        }
+
     return(
-        <>
+        <>  
+            <div className="relative flex justify-end items-end">
+                <div className="absolute top-0 right-0 m-5">
+                    { popup.show && (<p className={`popupmessage px-2 py-1 items-center rounded text-white ${
+                        popup.type === 'success' ? 'bg-green-700 border-green-300' : 
+                        popup.type === 'error' ? 'bg-red-900 border-red-300' : 'bg-sky-700'
+                    }`}>{popup.message}</p>)}
+                </div>
+            </div>
             <div className="flex justify-center items-center h-40">
                 <h1 className="text-3xl">What's our task for <span className="font-semibold">{getTitle}</span> today?</h1>
             </div>
