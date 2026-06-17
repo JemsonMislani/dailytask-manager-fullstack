@@ -13,6 +13,11 @@ export default function TaskSection(){
     const nav = useNavigate()
     const [task, setTask] = useState([])
     const [alltask, setAllTask] = useState([])
+    const [popup, setPopUp] = useState({
+        show: false,
+        message: '',
+        type: ''
+    })
 
     useEffect(() => {
     const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
@@ -51,6 +56,7 @@ export default function TaskSection(){
             setFindSecId(null)
             setTitle('')
             setNotes('')
+            popUpMessageForSection('Section Updated✅', 'success')
         })
         .catch(err => console.log(err))
     }
@@ -64,7 +70,8 @@ export default function TaskSection(){
         })
         .then(result => {
             setSection(prev => prev.filter(sec => sec.id !== id))
-            console.log(result)
+            result
+            popUpMessageForSection('Section Deleted⛔', 'error')
         })
         .catch(err => console.log(err))
     }
@@ -91,6 +98,21 @@ export default function TaskSection(){
       .catch(err => console.log(err))
     }, [])
 
+    const popUpMessageForSection = (message, type) => {
+        setPopUp({
+            show: true,
+            message,
+            type
+        })
+        setTimeout(() => {
+            setPopUp({
+                show: false,
+                message: '',
+                type: ''
+            })
+        }, 2000)
+    }
+
 
     return(
         <>
@@ -112,12 +134,20 @@ export default function TaskSection(){
           </div>
         </aside>
             <main className="flex-1 p-6 overflow-auto">
-            <h1 className="text-2xl font-semibold mb-5">Tasks sections📝</h1>
+            <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-semibold">Tasks sections📝</h1>
+                <div>
+                    { popup.show && (<p className={`popupmessage px-2 py-1 items-center rounded text-white 
+                    ${popup.type === 'success' ? 'bg-green-700 border-green-300' : 
+                      popup.type === 'error' ? 'bg-red-900 border-red-300' : 'bg-sky-700'
+                    }`}>{popup.message}</p>)}
+                </div>
+            </div>
                 <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(3in, max-content))' }}>
                     {section.map(sec => (
                     <div
                         key={sec.id}
-                        className="border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
+                        className="mt-5 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
                         style={{ width: '3in', height: '3in' }}
                     >
                         <div 
