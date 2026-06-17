@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [desc, setDesc] = useState('')
   const [alltask, setAllTask] = useState([])
   const [task, setTask] = useState([])
+  const [popup, setPopUp] = useState(false)
 
   const handleAddSecBtn = () => {
     if(!title || !desc){
@@ -33,6 +34,11 @@ export default function Dashboard() {
       setTitle('')
       setDesc('')
       setShowInp(false)
+      setPopUp(true)
+
+      setTimeout(() => {
+        setPopUp(false)
+      }, 2000)
     })
     .catch(err => console.log(err))
   }
@@ -50,7 +56,7 @@ export default function Dashboard() {
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask?user_id=' + userId, {
+        axios.get('http://localhost:3004/getTask', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -62,6 +68,8 @@ export default function Dashboard() {
         })
       .catch(err => console.log(err))
     }, [userId])
+
+    
 
   return (
     <>
@@ -83,12 +91,16 @@ export default function Dashboard() {
           </div>
         </aside>
         <main className="flex-1 p-6">
-          <h1 className="text-2xl font-semibold">Welcome! What's our task for today?📝</h1>
-          <p className="mt-2 text-gray-600">Small tasks everyday, add up to big results.✅️</p>
-          <button 
+          <h1 className="text-2xl font-semibold">Welcome, you can create a section for your list of tasks!📝</h1>
+          <p className="mt-2 text-gray-600">Small tasks everyday, add up to big results.✅️</p> 
+          <div className="flex flex-row items-center">
+            <button 
             className="px-4 py-4 rounded m-5 ml-0 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-400"
             onClick={() => setShowInp(!showinp)}
-            >Add Section ✚</button>
+            >Add Section ✚
+            </button>
+            {popup && (<span className="flex justify-center items-center border border-green-300 px-2 py-1 rounded text-white bg-green-700 font-0.5">Added to Task section ✅️</span>)}
+          </div>
             <div>
                 {
                   showinp && (

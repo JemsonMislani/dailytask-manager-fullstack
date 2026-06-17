@@ -53,7 +53,12 @@ export default function CreateTask() {
         })
 
         .then(() => {
-        return axios.get('http://localhost:3004/getTask/' + section_id)})
+        return axios.get('http://localhost:3004/getTask/' + section_id, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+    })
 
         .then(result => {
             setTask(result.data)
