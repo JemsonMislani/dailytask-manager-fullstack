@@ -55,24 +55,29 @@ export default function PendingTasksLists(){
 
     return(
         <>
-            <div className="min-h-screen flex flex-col items-center pt-10 bg-gray-100">
-                <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+            <div className="min-h-screen flex flex-col items-center pt-10 bg-gradient-to-b from-gray-100 to-gray-200 px-4">
+                <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
                     Pending tasks lists
                 </h1>
 
-                <div className="w-full max-w-md flex flex-col gap-3">
+                <div className="w-full max-w-2xl flex flex-col gap-3">
                     {task.map((t) => (
                     <div
                         key={t.id}
-                        className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-sky-500"
+                        className="bg-white p-4 rounded-lg shadow-md border-l-4 border-sky-500 hover:shadow-lg transition duration-200"
                     >
-                        <div className="flex items-center justify-between">
-                        <p className="text-gray-700 text-base m-0 font-bold">
-                              {t.task_name} - {formatDate(t.due_date)} - {formatTime(t.due_time)}
+                        <div className="flex items-center justify-between gap-3">
+                        <p className="text-gray-700 text-base m-0 font-semibold flex-1 truncate">
+                            {t.task_name}
                         </p>
-                        <span>⌛</span>
+                            <div className="flex items-center gap-3 text-sm text-gray-500 whitespace-nowrap">
+                                <span>{formatDate(t.due_date)}</span>
+                                <span>•</span>
+                                <span>{formatTime(t.due_time)}</span>
+                                <span className="text-green-500 text-lg">⌛</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     ))}
                 </div>
             </div>
