@@ -138,7 +138,7 @@ export default function Dashboard() {
                         value={desc}
                         onChange={(e) => setDesc(e.target.value)}/>
                       <button
-                        className="bg-green-700 px-6 py-2 text-white rounded hover:bg-green-800"
+                        className="bg-green-700 px-6 py-2 text-white rounded hover:bg-green-800 cursor-pointer"
                         onClick={(e) => { 
                           e.preventDefault();
                          if(handleAddSecBtn()){
@@ -146,7 +146,7 @@ export default function Dashboard() {
                          }
                         }}>Add</button>
                       <button
-                        className="bg-red-700 px-6 py-2 text-white rounded hover:bg-red-800"
+                        className="bg-red-700 px-6 py-2 text-white rounded hover:bg-red-800 cursor-pointer"
                         onClick={() => setShowInp(false)}>Close</button>
                     </div>
                   )
