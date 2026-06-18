@@ -12,11 +12,8 @@ app.use(cors())
 app.use(express.json())
 
 const pool = new Pool({
-    user: 'postgres',
-    password: 'Im_Jem23*',
-    host: 'localhost',
-    database: 'dailytask_manager_fullstack',
-    port: 5432
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
 })
 
 // JWT middle ware.
@@ -64,8 +61,7 @@ app.post('/createAcc', async (req, res) => {
 
         res.json(result.rows[0]);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('Server Error');
+        res.status(500).send('Server Error', error);
     }
 });
 
