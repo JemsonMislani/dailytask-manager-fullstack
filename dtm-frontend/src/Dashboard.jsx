@@ -124,9 +124,9 @@ export default function Dashboard() {
             <div>
                 {
                   showinp && (
-                    <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 mt-4">
                       <input 
-                        className="border px-3 py-2 rounded w-full sm:w-auto"
+                        className="border px-3 py-2 rounded w-full sm:flex-1 min-w-0"
                         type="text" 
                         placeholder="Enter section name"
                         value={title}
