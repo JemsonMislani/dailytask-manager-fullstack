@@ -163,13 +163,12 @@ export default function TaskSection(){
                     }`}>{popup.message}</p>)}
                 </div>
             </div>
-                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center">
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 place-items-stretch">
                     {section.map(sec => (
-                    <div
-                        key={sec.id}
-                        className="mt-5 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 shadow-lg rounded flex flex-col justify-between cursor-pointer"
-                        style={{ width: '3.5in', height: '3in' }}
-                    >
+                        <div
+                            key={sec.id}
+                            className="mt-5 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition p-4 flex flex-col justify-between cursor-pointer w-full h-full min-h-[280px]"
+                        >
                         <div 
                             className="flex items-center justify-center" style={{ flex: '0 0 auto' }}
                             >
