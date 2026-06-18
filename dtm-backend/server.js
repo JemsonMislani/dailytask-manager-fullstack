@@ -298,7 +298,7 @@ app.get('/getSectionsWithIncomplete', verifyToken, async(req, res) => {
     }
 })
 
-const PORT = 3004;
+const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => {
     console.log(`Jem! your server is running on port ${PORT}`)
 })
