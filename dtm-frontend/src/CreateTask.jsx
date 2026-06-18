@@ -221,18 +221,18 @@ export default function CreateTask() {
                     }`}>{popup.message}</p>)}
                 </div>
             </div>
-            <div className="flex justify-center items-center h-40">
+            <div className="flex justify-center items-center px-4 py-6 text-center">
                 <h1 className="text-3xl">What's our task for <span className="font-semibold">{getTitle}</span> today?</h1>
             </div>
-            <div className="flex justify-center items-center h-30">
-                <div className="flex gap-2 px-10 py-10 rounded shadow-sm bg-gray-100">
+            <div className="flex justify-center items-center px-4">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-3 p-4 sm:p-6 bg-gray-100 rounded shadow-sm w-full max-w-3xl mb-10">
                     <input 
                         className="border border-1 px-10 pl-2 py-3 rounded focus:outline-none focus:border-blue-500  focus:ring-blue-200 transition"
                         type="text" placeholder="Enter task" 
                         value={todo}
                         onChange={(e) => setTodo(e.target.value)}/>
                     <input
-                        className="border border-1 px-10 pl-2 py-3 rounded focus:outline-none focus:border-blue-500  focus:ring-blue-200 transition"
+                        className="border border-1 px-10 pl-2 py-3 rounded focus:outline-none focus:border-blue-500 focus:ring-blue-200 transition"
                         type="date" 
                         value={date}
                         onChange={(e) => setDate(e.target.value)}/>
@@ -245,7 +245,7 @@ export default function CreateTask() {
                         onClick={addTaskBtn}>Add Task</button>
                 </div>
             </div>
-            <div className="m-10 mr-auto ml-auto w-230">
+            <div className="w-full max-w-4xl mx-auto px-4 space-y-3">
                 {
                     task.map((t) => (
                     <div 
@@ -254,7 +254,7 @@ export default function CreateTask() {
                         {
                             findId === t.id ? 
                             (<>
-                            <div className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100 font-semibold">
+                            <div className="grid grid-cols-1 sm:grid-cols-[3fr_1fr_1fr_1fr] gap-2 items-center w-full bg-gray-100 p-3 rounded">
                                 <input 
                                     className="border p-2 rounded"
                                     type="text" 
@@ -270,7 +270,7 @@ export default function CreateTask() {
                                     type="time"
                                     value={editTime} 
                                     onChange={(e) => setEditTime(e.target.value)}/>
-                                <div>                                    <button        
+                                <div className="flex">                                    <button        
                                         className="text-green-700 mr-1 cursor-pointer hover:bg-green-700 hover:text-white transition transform hover:scale-105 py-2 px-4 rounded"
                                         onClick={() => handleSaveBtn(t.id)}>save</button>
                                     <button 
@@ -290,17 +290,21 @@ export default function CreateTask() {
                                 textDecoration: t.completed ? 'line-through' : 'none',
                                 color: t.completed ? '#585c63' : '#111827'
                             }}>
-                                {t.task_name} • {formatDate(t.due_date)} • {formatTime(t.due_time)}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-center sm:text-left">
+                                <div>{t.task_name}</div>
+                                <div>{formatDate(t.due_date)}</div>
+                                <div>{formatTime(t.due_time)}</div>
+                            </div>
                             </span>
 
                             <button 
-                                className="py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500"
+                                className="text-sm py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500"
                                 onClick={() => clickEdit(t)}>Edit</button>
                             <button 
-                                className="py-2 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700"
-                                onClick={() => handleCompletedBtn(t.id)}>{t.completed ? 'Undo Task' : 'Completed'}</button>
+                                className="text-sm py-2 px-1 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700"
+                                onClick={() => handleCompletedBtn(t.id)}>{t.completed ? 'Undo' : 'Completed'}</button>
                             <button 
-                                className="py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700"
+                                className="text-sm py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700"
                                 onClick={() => handleDeleteBtn(t.id)}>Delete</button>
                         </div>
                             </>)
