@@ -9,7 +9,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const app = express()
 
 app.use(cors({
-    origin: 'https://dailytask-manager-fullstack.vercel.app',
+
+    origin: [
+        'http://localhost:5173',
+        'https://dailytask-manager-fullstack.vercel.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -65,7 +69,7 @@ app.post('/createAcc', async (req, res) => {
 
         res.json(result.rows[0]);
     } catch (error) {
-        res.status(500).send('Server Error', error);
+        res.status(500).send({message: 'Server Error', error});
     }
 });
 

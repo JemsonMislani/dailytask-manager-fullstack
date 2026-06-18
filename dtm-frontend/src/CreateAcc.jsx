@@ -13,7 +13,7 @@ export default function CreateAcc() {
       alert('Please fill out fields')
       return
     }
-    axios.post('http://localhost:3004/createAcc', {
+    axios.post(`${import.meta.env.VITE_API_URL}/createAcc`, {
       email: email, password: password
     })
     .then(result => {
