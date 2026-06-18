@@ -8,7 +8,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: 'https://dailytask-manager-fullstack.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}))
 app.use(express.json())
 
 const pool = new Pool({
