@@ -24,7 +24,7 @@ export default function TaskPending() {
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getSectionsWithIncomplete?user_id=' + userId, {
+        axios.get(`${import.meta.env.VITE_API_URL}/getSectionsWithIncomplete`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -40,7 +40,7 @@ export default function TaskPending() {
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask?user_id=' + userId, {
+        axios.get(`${import.meta.env.VITE_API_URL}/getTask`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

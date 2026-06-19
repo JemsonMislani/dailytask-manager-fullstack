@@ -21,7 +21,7 @@ export default function PendingTasksLists(){
       if(!userId || !section_id){
         return
       }
-        axios.get('http://localhost:3004/getTask', {
+        axios.get(`${import.meta.env.VITE_API_URL}/getTask`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

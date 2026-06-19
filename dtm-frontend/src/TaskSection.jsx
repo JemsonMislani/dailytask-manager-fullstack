@@ -25,7 +25,7 @@ export default function TaskSection(){
     if(!token){
         return
     }
-    axios.get('http://localhost:3004/getSection', {
+    axios.get(`${import.meta.env.VITE_API_URL}/getSection`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -42,7 +42,7 @@ export default function TaskSection(){
 
     const handleSaveBtn = (id) => {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
-        axios.put('http://localhost:3004/editSection/' + id, {
+        axios.put(`${import.meta.env.VITE_API_URL}/editSection/` + id, {
             title: title, description: notes
         }, {
             headers: {
@@ -64,7 +64,7 @@ export default function TaskSection(){
 
     const handleDelBtn = (id) => {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
-        axios.delete('http://localhost:3004/deleteSection/' + id, {
+        axios.delete(`${import.meta.env.VITE_API_URL}/deleteSection/` + id, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -83,10 +83,7 @@ export default function TaskSection(){
             return
         }
 
-        const decoded = jwtDecode(token);
-        const userId = decoded.id;
-
-        axios.get('http://localhost:3004/getTask?user_id=' + userId, {
+        axios.get(`${import.meta.env.VITE_API_URL}/getTask`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

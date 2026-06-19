@@ -27,7 +27,7 @@ export default function CreateTask() {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
         if (!section_id) 
             return;
-        axios.get('http://localhost:3004/getTask/' + section_id, {
+        axios.get(`${import.meta.env.VITE_API_URL}/getTask/` + section_id, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -45,7 +45,7 @@ export default function CreateTask() {
             alert('Please fill out all fields')
             return
         }
-        axios.post('http://localhost:3004/createTask', {
+        axios.post(`${import.meta.env.VITE_API_URL}/createTask`, {
             section_id: Number(section_id),
             task_name: todo,
             due_date: date,
@@ -58,7 +58,7 @@ export default function CreateTask() {
         })
 
         .then(() => {
-        return axios.get('http://localhost:3004/getTask/' + section_id, {
+        return axios.get(`${import.meta.env.VITE_API_URL}/getTask/` + section_id, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -106,7 +106,7 @@ export default function CreateTask() {
 
         useEffect(() => {
             const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
-            axios.get('http://localhost:3004/getSection/' + section_id, {
+            axios.get(`${import.meta.env.VITE_API_URL}/getSection/` + section_id, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -134,7 +134,7 @@ export default function CreateTask() {
                 setFindId(null)
                 return
             }
-            axios.put('http://localhost:3004/updateTask/' + id, {
+            axios.put(`${import.meta.env.VITE_API_URL}/updateTask/` + id, {
                 task_name: editTodo,
                 due_date: editDate, 
                 due_time: editTime,
@@ -161,7 +161,7 @@ export default function CreateTask() {
         const handleCompletedBtn = (id) => {
             const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
             const toUpdate = task.find(tu => tu.id === id)
-            axios.put('http://localhost:3004/updateTask/' + id, {
+            axios.put(`${import.meta.env.VITE_API_URL}/updateTask/` + id, {
                 task_name: toUpdate.task_name, 
                 due_date: toUpdate.due_date, 
                 due_time: toUpdate.due_time, 
@@ -183,7 +183,7 @@ export default function CreateTask() {
 
         const handleDeleteBtn = (id) => {
             const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
-            axios.delete('http://localhost:3004/deleteTask/' + id, {
+            axios.delete(`${import.meta.env.VITE_API_URL}/deleteTask/` + id, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

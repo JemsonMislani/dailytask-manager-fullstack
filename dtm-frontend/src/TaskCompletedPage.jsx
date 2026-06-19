@@ -25,7 +25,7 @@ export default function TaskCompleted() {
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getSectionsWithCompleted', {
+        axios.get(`${import.meta.env.VITE_API_URL}/getSectionsWithCompleted`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -42,7 +42,7 @@ export default function TaskCompleted() {
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask', {
+        axios.get(`${import.meta.env.VITE_API_URL}/getTask`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

@@ -272,7 +272,6 @@ app.get('/getTask', verifyToken, async (req, res) => {
     try {
         const userId = req.user.id;
         const result = await pool.query('SELECT * FROM tasks WHERE user_id = $1 ORDER BY id ASC ', [ userId ])
-            return res.json(result.rows)
         return res.json(result.rows)
     } catch (error) {
         console.log(error)

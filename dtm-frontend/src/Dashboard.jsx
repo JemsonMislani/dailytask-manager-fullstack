@@ -25,7 +25,7 @@ export default function Dashboard() {
 
   const addSectionTitle = () => {
     const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
-    axios.post('http://localhost:3004/createSection', {
+    axios.post(`${import.meta.env.VITE_API_URL}/createSection`, {
       title: title, description: desc
     }, { headers: {
       Authorization: `Bearer ${token}`
@@ -57,7 +57,7 @@ export default function Dashboard() {
       if(!userId){
         return
       }
-        axios.get('http://localhost:3004/getTask', {
+        axios.get(`${import.meta.env.VITE_API_URL}/getTask`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
