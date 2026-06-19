@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useEffect } from "react"
 import { jwtDecode } from "jwt-decode";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 export default function Dashboard() {
@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [task, setTask] = useState([])
   const [popup, setPopUp] = useState(false)
   const [open, setOpen] = useState(false);  
+  const nav = useNavigate()
 
   const handleAddSecBtn = () => {
     if(!title || !desc){
@@ -70,7 +71,21 @@ export default function Dashboard() {
       .catch(err => console.log(err))
     }, [userId])
 
-    
+    const handleLogoutBtn = () =>{
+      const clickLogout = confirm('Are you sure you want to logout?')
+      if(clickLogout){
+        localStorage.removeItem('userstokens');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('userstokens');
+        sessionStorage.removeItem('user')
+
+        setTimeout(() => {
+        nav('/', {replace: true})
+        }, 2000);
+      } else {
+        return
+      }
+    }
 
   return (
     <>
@@ -97,6 +112,7 @@ export default function Dashboard() {
             <Link to={'/pendingtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
               <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
             </Link>
+            <button onClick={handleLogoutBtn} className="block px-4 py-2 rounded hover:bg-gray-700">Logout ?</button>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani
