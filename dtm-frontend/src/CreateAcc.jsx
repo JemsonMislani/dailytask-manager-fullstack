@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 export default function CreateAcc() {
   const [user, setUser] = useState(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const nav = useNavigate()
 
   const handleSubmitBtn = (e) => {
     e.preventDefault()
@@ -20,8 +21,12 @@ export default function CreateAcc() {
       setUser(result.data)
       setEmail('')
       setPassword('')
+      alert('Account created successfully!')
+      nav('/')
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+        alert(err.response?.data.message || 'Email already used')
+    })
   }
 
   return (
