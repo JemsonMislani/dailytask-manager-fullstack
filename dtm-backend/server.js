@@ -66,6 +66,17 @@ app.post('/createAcc', async (req, res) => {
             'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email',
             [cleanEmail, hashedPw]
         );
+        const user = result.rows[0]
+
+        const token = jwt.sign(
+            {id: user.id}, 
+            JWT_SECRET, 
+            {expiresIn: '24h'}
+        );
+        return res.json({
+            token,
+            user: {id: user.id, email: user.email}
+        })
 
         res.json(result.rows[0]);
     } catch (error) {

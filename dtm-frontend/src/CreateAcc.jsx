@@ -19,13 +19,15 @@ export default function CreateAcc() {
     })
     .then(result => {
       setUser(result.data)
+      localStorage.setItem('userstokens', result.data.token)
+      localStorage.setItem('user', JSON.stringify(result.data.user))
       setEmail('')
       setPassword('')
       alert('Account created successfully!')
       nav('/')
     })
     .catch(err => {
-        alert(err.response?.data.message || 'Email already used')
+        alert(err.response?.data?.message || 'Email already used')
     })
   }
 
