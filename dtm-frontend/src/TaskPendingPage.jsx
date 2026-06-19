@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useAuthForLogout } from "../Logout";
 
 export default function TaskPending() {
     const [userId, setUserId] = useState(null)
@@ -10,6 +11,7 @@ export default function TaskPending() {
     const [section, setSection] = useState([])
     const [open, setOpen] = useState(false)
     const nav = useNavigate()
+    const { handleLogoutBtn } = useAuthForLogout()
 
     useEffect(() => {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
@@ -79,6 +81,7 @@ export default function TaskPending() {
             <Link to={'/pendingtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
               <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
             </Link>
+            <button onClick={handleLogoutBtn} className="block px-4 py-2 rounded hover:bg-gray-700">Logout ?</button>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani

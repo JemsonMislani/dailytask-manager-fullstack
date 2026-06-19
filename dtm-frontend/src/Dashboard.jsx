@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useAuthForLogout } from "../Logout";
 
 export default function Dashboard() {
   const [section, setSection] = useState([])
@@ -15,6 +16,7 @@ export default function Dashboard() {
   const [popup, setPopUp] = useState(false)
   const [open, setOpen] = useState(false);  
   const nav = useNavigate()
+  const { handleLogoutBtn } = useAuthForLogout()
 
   const handleAddSecBtn = () => {
     if(!title || !desc){
@@ -70,22 +72,6 @@ export default function Dashboard() {
         })
       .catch(err => console.log(err))
     }, [userId])
-
-    const handleLogoutBtn = () =>{
-      const clickLogout = confirm('Are you sure you want to logout?')
-      if(clickLogout){
-        localStorage.removeItem('userstokens');
-        localStorage.removeItem('user');
-        sessionStorage.removeItem('userstokens');
-        sessionStorage.removeItem('user')
-
-        setTimeout(() => {
-        nav('/', {replace: true})
-        }, 2000);
-      } else {
-        return
-      }
-    }
 
   return (
     <>

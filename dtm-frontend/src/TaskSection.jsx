@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import { useAuthForLogout } from "../Logout";
 
 export default function TaskSection(){
     const [section, setSection] = useState([])
@@ -14,6 +15,7 @@ export default function TaskSection(){
     const [task, setTask] = useState([])
     const [alltask, setAllTask] = useState([])
     const [open, setOpen] = useState(false)
+    const { handleLogoutBtn } = useAuthForLogout()
     const [popup, setPopUp] = useState({
         show: false,
         message: '',
@@ -137,6 +139,7 @@ export default function TaskSection(){
             <Link to={'/pendingtaskpage'} className="block px-4 py-2 rounded hover:bg-gray-700">Task pending : 
               <label className="text-white m-1 p-1 border px-3 rounded-2xl bg-sky-700 font-bold">{alltask.filter(t => !t.completed).length}</label>
             </Link>
+            <button onClick={handleLogoutBtn} className="block px-4 py-2 rounded hover:bg-gray-700">Logout ?</button>
           </nav>
           <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
           © 2026 Jemson Mislani
