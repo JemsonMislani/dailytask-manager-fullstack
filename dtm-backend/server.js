@@ -56,6 +56,9 @@ app.post('/createAcc', async (req, res) => {
         if(!email || !password){
             return res.status(400).json({message: 'Please fill out fields'})
         }
+        if(password.length < 6){
+            return res.status(400).json({message: 'Password must be at least 6 characters long'})
+        }
         const cleanEmail = email.toLowerCase().trim();
         const accExist = await pool.query('SELECT id FROM users WHERE email=$1', [cleanEmail])
         if(accExist.rows.length > 0){
@@ -77,8 +80,6 @@ app.post('/createAcc', async (req, res) => {
             token,
             user: {id: user.id, email: user.email}
         })
-
-        res.json(result.rows[0]);
     } catch (error) {
         res.status(500).send({message: 'Server Error', error});
     }
