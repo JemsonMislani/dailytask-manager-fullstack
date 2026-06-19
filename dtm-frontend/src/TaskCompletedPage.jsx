@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import { useAuthForLogout } from "../Logout";
+import { useAuthForLogout } from "./logout";
 
 export default function TaskCompleted() {
     const [section, setSection] = useState([])

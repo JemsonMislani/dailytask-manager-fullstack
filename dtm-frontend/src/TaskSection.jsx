@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { FaEdit, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
-import { useAuthForLogout } from "../Logout";
+import { useAuthForLogout } from "./logout";
 
 export default function TaskSection(){
     const [section, setSection] = useState([])

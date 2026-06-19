@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { useAuthForLogout } from "../Logout";
+import { useAuthForLogout } from "./logout";
 
 export default function TaskPending() {
     const [userId, setUserId] = useState(null)

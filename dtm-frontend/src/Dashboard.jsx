@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { useAuthForLogout } from "../Logout";
+import { useAuthForLogout } from "./logout";
 
 export default function Dashboard() {
   const [section, setSection] = useState([])
