@@ -282,30 +282,43 @@ export default function CreateTask() {
                             : 
                             (<>
                         <div
-                            className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-1 items-center w-full max-w-4xl mb-1 p-2 rounded bg-gray-100"
+                            className="w-full bg-white border border-gray-300 rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col gap-2"
                         >
-                            <span 
+                            <div className="flex justify-between items-start">
+                            <h2
+                                className="text-lg font-semibold"
+                                style={{
+                                textDecoration: t.completed ? "line-through" : "none",
+                                color: t.completed ? "#6b7280" : "#111827",
+                            }}
+                            >
+                            {t.task_name}
+                            </h2>
+                            </div>
+                            <div
                                 className="font-semibold rounded p-2 bg-gray-300"
                                 style={{
-                                textDecoration: t.completed ? 'line-through' : 'none',
-                                color: t.completed ? '#585c63' : '#111827'
-                            }}>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-center sm:text-left">
-                                <div>{t.task_name}</div>
-                                <div>{formatDate(t.due_date)}</div>
-                                <div>{formatTime(t.due_time)}</div>
+                                    textDecoration: t.completed ? "line-through" : "none",
+                                    color: t.completed ? "#585c63" : "#111827"
+                                }}
+                            >
+                            <div 
+                                className="flex flex-wrap gap-4 text-sm text-gray-500 bg-gray-100 rounded-lg px-3 py-2">
+                                <span>📅 {formatDate(t.due_date)}</span>
+                                <span>⏰ {formatTime(t.due_time)}</span>
                             </div>
-                            </span>
-
-                            <button 
-                                className="text-sm py-2 bg-sky-500 text-white rounded cursor-pointer hover:bg-sky-700 active:bg-sky-500"
+                            </div>
+                            <div className="flex justify-end gap-2 pt-2 border-t">
+                                <button 
+                                className="px-4 py-2 text-sm rounded bg-sky-500 text-white hover:bg-sky-600 transition cursor-pointer"
                                 onClick={() => clickEdit(t)}>Edit</button>
                             <button 
-                                className="text-sm py-2 px-1 bg-green-700 text-white rounded cursor-pointer hover:bg-green-900 active:bg-green-700"
+                                className="px-4 py-2 text-sm rounded bg-green-600 text-white hover:bg-green-700 transition cursor-pointer"
                                 onClick={() => handleCompletedBtn(t.id)}>{t.completed ? 'Undo' : 'Completed'}</button>
                             <button 
-                                className="text-sm py-2 bg-red-700 text-white rounded cursor-pointer hover:bg-red-900 active:bg-red-700"
+                                className="px-4 py-2 text-sm rounded bg-red-700 text-white hover:bg-red-900 transition cursor-pointer"
                                 onClick={() => handleDeleteBtn(t.id)}>Delete</button>
+                            </div>
                         </div>
                             </>)
                         }
