@@ -8,6 +8,8 @@ export default function LoginAcc() {
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const nav = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');  
 
   const handleLoginBtn = (e) => {
     e.preventDefault()
@@ -15,6 +17,9 @@ export default function LoginAcc() {
       alert('Please fill out fields')
       return
     }
+
+    setError('');
+    setLoading(true)
     axios.post(`${import.meta.env.VITE_API_URL}/createLogin`, {
       email: email, password: password
     })
@@ -29,19 +34,40 @@ export default function LoginAcc() {
     }
       nav('/success')
     })
-    .catch(err => {
-      alert('Invalid credentials')
-      console.log(err)
+    .catch(() => {
+      setError('Invalid credentials')
+    })
+    .finally(() => {
+      setLoading(false);
     })
   }
 
   return (
     <>
+      {
+        loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+                <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        )
+      }
       <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-300 via-sky-100 to-orange-200'>
-        <form onSubmit={handleLoginBtn} className='w-full max-w-mdw-full max-w-md sm:p-4'>
+        <form
+            onSubmit={handleLoginBtn}
+            className={`w-full max-w-md sm:p-4 transition-opacity duration-300 ${
+                loading ? 'opacity-50 pointer-events-none' : ''
+            }`}
+        >
           <div className='w-full min-h-screen sm:min-h-auto sm:rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 shadow-2xl p-6 sm:p-10 flex flex-col justify-center'>
               <div>
                   <div className='text-3xl font-semibold text-center mb-8 text-gray-800'>Login</div>
+                  {
+                    error && (
+                              <div className="mb-4 text-sm text-red-900 bg-red-500/30 border border-red-400 rounded-lg px-3 py-2">
+                                  {error}
+                              </div>
+                      )
+                  }
                   <div className='flex flex-col gap-5'>
                   <input 
                     className='w-full py-3 px-3 bg-white/80 border border-white/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500'
@@ -65,7 +91,9 @@ export default function LoginAcc() {
                   />
                   <label htmlFor="">Remember me</label>
                   </div>
-                    <button className='w-full py-3 bg-sky-600 text-white rounded-lg text-lg hover:bg-sky-700 active:bg-sky-800 transition cursor-pointer'>Login</button>
+                    <button 
+                      disabled={loading}
+                      className='w-full py-3 bg-sky-600 text-white rounded-lg text-lg hover:bg-sky-700 active:bg-sky-800 transition cursor-pointer'>{loading ? 'Logging in...' : 'Login'}</button>
                     <div className='flex justify-center'>
                       <Link 
                         className='text-center text-sm text-sky-700 hover:text-sky-900'
