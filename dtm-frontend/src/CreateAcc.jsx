@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import './LoginAcc.css'
 
 export default function CreateAcc() {
   const [user, setUser] = useState(null)
@@ -9,6 +11,7 @@ export default function CreateAcc() {
   const nav = useNavigate()
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');  
+  const [showpass, setShowPass] = useState(false)
 
   const handleSubmitBtn = (e) => {
     e.preventDefault()
@@ -72,12 +75,19 @@ export default function CreateAcc() {
                     placeholder="Enter email or username"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}/>
+                  <div className='relative'>
                   <input
                     className='w-full py-3 px-3 bg-white/80 border border-white/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500' 
-                    type="password" 
+                    type={showpass ? 'text' : 'password'} 
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}/>
+                    <div 
+                    className='absolute top-3.5 right-4 text-2xl cursor-pointer text-sky-900'
+                    onClick={() => setShowPass(!showpass)}>
+                    {showpass ? <FaEyeSlash /> : <FaEye />}
+                  </div>
+                  </div>
                     <button 
                       disabled={loading}
                       className='w-full py-3 bg-sky-600 text-white rounded-lg text-lg hover:bg-sky-700 active:bg-sky-800 transition cursor-pointer'>{loading ? 'Signing in...' : 'Submit'}</button>
