@@ -12,7 +12,7 @@ export default function TaskCompleted() {
     const [alltask, setAllTask] = useState([])
     const [open, setOpen] = useState(false)
     const nav = useNavigate()
-    const { handleLogoutBtn } = useAuthForLogout()
+    const { handleLogoutBtn, loading } = useAuthForLogout()
 
     useEffect(() => {
         const token = localStorage.getItem('userstokens') || sessionStorage.getItem('userstokens');
@@ -59,6 +59,13 @@ export default function TaskCompleted() {
 
     return(
         <>
+      {
+        loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-[9999]">
+                <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        )
+      }
      <div className="flex h-screen bg-gray-100">
       {open && (
         <div

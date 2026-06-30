@@ -15,7 +15,7 @@ export default function TaskSection(){
     const [task, setTask] = useState([])
     const [alltask, setAllTask] = useState([])
     const [open, setOpen] = useState(false)
-    const { handleLogoutBtn } = useAuthForLogout()
+    const { handleLogoutBtn, loading } = useAuthForLogout()
     const [popup, setPopUp] = useState({
         show: false,
         message: '',
@@ -116,6 +116,13 @@ export default function TaskSection(){
 
     return(
         <>
+        {
+          loading && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-[9999]">
+                  <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+          )
+        }
      <div className="flex h-screen bg-gray-100">
       {open && (
         <div
