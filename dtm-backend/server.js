@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const app = express()
 
 app.use(cors({
-
     origin: [
         'http://localhost:5173',
         'https://dailytask-manager-fullstack.vercel.app'
@@ -31,9 +30,7 @@ const verifyToken = (req, res, next) => {
     if (!authHeader) {
         return res.status(401).json({ message: "No token provided" });
     }
-
     const token = authHeader.split(" ")[1];
-
     if (!token || token === "null" || token === "undefined") {
     return res.status(401).json({ message: "Invalid token format" });
     }
